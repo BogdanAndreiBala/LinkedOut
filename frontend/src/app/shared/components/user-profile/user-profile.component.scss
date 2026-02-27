@@ -104,3 +104,12 @@
   margin-left: 16px;
   color: #333;
 }
+.birthday-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+mat-icon {
+  margin-top: -4px;
+}

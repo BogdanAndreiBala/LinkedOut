@@ -45,5 +45,42 @@
         </div>
       </mat-card-content>
     </mat-card>
+
+    <app-profile-main-list-item title="About">
+      <p class="about-text">{{ user.about }}</p>
+      <p class="birthday-text gray-text">
+        <mat-icon>cake</mat-icon>
+        {{ user.dateOfBirth | endDate }}
+      </p>
+    </app-profile-main-list-item>
+
+    <app-profile-main-list-item title="Experience">
+      @for (job of user.experience; track $index) {
+        <app-profile-inner-list-item
+          [title]="job.title"
+          [subtitle]="job.company + ' • ' + job.location"
+          [dateRange]="job.startDate + '—' + (job.endDate | endDate)"
+          [description]="job.description"
+        ></app-profile-inner-list-item>
+      }
+    </app-profile-main-list-item>
+
+    <app-profile-main-list-item title="Education">
+      @for (education of user.education; track $index) {
+        <app-profile-inner-list-item
+          [title]="education.institution"
+          [subtitle]="education.degree + ' • ' + education.fieldOfStudy"
+          [dateRange]="education.startYear + '—' + (education.endYear | endDate)"
+        ></app-profile-inner-list-item>
+      }
+    </app-profile-main-list-item>
+
+    <app-profile-main-list-item title="Skills">
+      <mat-chip-set>
+        @for (skill of user.skills; track $index) {
+          <mat-chip>{{ skill }}</mat-chip>
+        }
+      </mat-chip-set>
+    </app-profile-main-list-item>
   </div>
 }
