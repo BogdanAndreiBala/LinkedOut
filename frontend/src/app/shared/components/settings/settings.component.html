@@ -1,0 +1,72 @@
+<div class="settings-container">
+  <h1>Settings</h1>
+
+  <form [formGroup]="settingsForm" (ngSubmit)="onSave()">
+    <app-profile-main-list-item title="Personal Information">
+      <div formGroupName="personalInfo" class="form-column">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" />
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Headline</mat-label>
+          <input matInput formControlName="headline" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Profile Image URL</mat-label>
+          <input matInput formControlName="image" />
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Date of Birth</mat-label>
+            <input matInput formControlName="dateOfBirth" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+            <input matInput formControlName="location" />
+          </mat-form-field>
+        </div>
+      </div>
+    </app-profile-main-list-item>
+
+    <app-profile-main-list-item title="Contact Information">
+      <div formGroupName="contactInfo" class="form-column">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Phone</mat-label>
+            <input matInput formControlName="phone" />
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Website</mat-label>
+          <input matInput formControlName="website" />
+        </mat-form-field>
+      </div>
+    </app-profile-main-list-item>
+
+    <app-profile-main-list-item title="About">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Tell people about yourself</mat-label>
+        <textarea matInput formControlName="about" rows="5"></textarea>
+      </mat-form-field>
+    </app-profile-main-list-item>
+
+    <div class="actions">
+      <button mat-flat-button type="submit" [disabled]="settingsForm.invalid">Save Changes</button>
+    </div>
+  </form>
+</div>
