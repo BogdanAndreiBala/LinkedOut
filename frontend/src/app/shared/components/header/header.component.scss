@@ -12,5 +12,8 @@
   .header__title {
     font-size: 1.5rem;
     font-weight: bold;
+    border: none;
+    background: var(--mat-sys-surface-container-high);
+    cursor: pointer;
   }
 }
