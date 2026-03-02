@@ -8,6 +8,12 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MAT_DATE_LOCALE,
+  MatNativeDateModule,
+  provideNativeDateAdapter,
+} from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -24,7 +30,10 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
+  providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
   standalone: true,
@@ -33,18 +42,24 @@ export class SettingsComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private userService = inject(UsersService);
   private router = inject(Router);
+  public maxDate = new Date();
+  public minDate = new Date(
+    this.maxDate.getFullYear() - 100,
+    this.maxDate.getMonth(),
+    this.maxDate.getDate(),
+  );
 
   public settingsForm: FormGroup = this.formBuilder.group({
     personalInfo: this.formBuilder.group({
       firstName: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(2)]],
-      headline: ['', [Validators.maxLength(120)]],
+      headline: ['', [Validators.required, Validators.maxLength(120)]],
       image: ['', [Validators.pattern(/^https?:\/\/.+/i)]],
-      dateOfBirth: [
+      dateOfBirth: [''],
+      location: [
         '',
-        [Validators.pattern(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/), pastDateValidator],
+        [Validators.maxLength(100), Validators.pattern(/^[A-Za-z][A-Za-z\s\-]+,\s[A-Za-z]{2}$/)],
       ],
-      location: ['', [Validators.maxLength(100)]],
     }),
 
     contactInfo: this.formBuilder.group({
@@ -79,6 +94,16 @@ export class SettingsComponent implements OnInit {
     });
   }
 
+  private formatLocation(location: string): string {
+    if (!location || !location.includes(', ')) return location;
+
+    const parts = location.split(', ');
+    const city = parts[0].replace(/\b\w/g, (char) => char.toUpperCase());
+    const country = parts[1].toUpperCase();
+
+    return `${city}, ${country}`;
+  }
+
   public onSave(): void {
     if (this.settingsForm.valid) {
       this.userService.currentUser().subscribe((currentUser) => {
@@ -90,7 +115,7 @@ export class SettingsComponent implements OnInit {
           headline: formData.personalInfo.headline,
           profileImage: formData.personalInfo.image || currentUser.profileImage,
           dateOfBirth: formData.personalInfo.dateOfBirth,
-          location: formData.personalInfo.location,
+          location: this.formatLocation(formData.personalInfo.location),
           email: formData.contactInfo.email,
           phone: formData.contactInfo.phone,
           website: formData.contactInfo.website,
@@ -105,19 +130,4 @@ export class SettingsComponent implements OnInit {
       });
     }
   }
-}
-
-export function pastDateValidator(control: FormControl): ValidationErrors | null {
-  const value = control.value;
-  if (!value) {
-    return null;
-  }
-
-  const inputDate = new Date(value);
-  const today = new Date();
-
-  if (inputDate > today) {
-    return { futureDate: true };
-  }
-  return null;
 }

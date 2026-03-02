@@ -50,7 +50,7 @@
       <p class="about-text">{{ user.about }}</p>
       <p class="birthday-text gray-text">
         <mat-icon>cake</mat-icon>
-        {{ user.dateOfBirth | endDate }}
+        {{ user.dateOfBirth | date: 'mediumDate' }}
       </p>
     </app-profile-main-list-item>
 
