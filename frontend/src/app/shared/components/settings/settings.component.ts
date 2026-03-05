@@ -75,7 +75,6 @@ export class SettingsComponent implements OnInit {
     this.userService.currentUser().subscribe({
       next: (user: User) => {
         this.loadedUser = user;
-        this.settingsForm.enable();
 
         this.settingsForm.get('personalInfo')?.patchValue({
           firstName: user.firstName,
@@ -94,6 +93,7 @@ export class SettingsComponent implements OnInit {
 
         this.settingsForm.get('about')?.patchValue(user.about);
         this.initialFormValue = this.settingsForm.value;
+        this.settingsForm.enable();
       },
       error: (err) => {
         this.snackBar.open('Failed to load profile. The server might be offline.', 'Close', {
