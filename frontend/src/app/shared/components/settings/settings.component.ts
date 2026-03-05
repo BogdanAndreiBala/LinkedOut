@@ -1,13 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DATE_LOCALE,
@@ -17,6 +9,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsersService } from '../../services/users.service';
 import { User } from '../../models/user.model';
 import { ProfileMainListItemComponent } from '../profile-main-list-item/profile-main-list-item.component';
@@ -42,6 +35,11 @@ export class SettingsComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private userService = inject(UsersService);
   private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
+
+  private loadedUser: User | null = null;
+  private initialFormValue: any;
+
   public maxDate = new Date();
   public minDate = new Date(
     this.maxDate.getFullYear() - 100,
@@ -72,8 +70,13 @@ export class SettingsComponent implements OnInit {
   });
 
   public ngOnInit(): void {
+    this.settingsForm.disable();
+
     this.userService.currentUser().subscribe({
       next: (user: User) => {
+        this.loadedUser = user;
+        this.settingsForm.enable();
+
         this.settingsForm.get('personalInfo')?.patchValue({
           firstName: user.firstName,
           lastName: user.lastName,
@@ -90,6 +93,15 @@ export class SettingsComponent implements OnInit {
         });
 
         this.settingsForm.get('about')?.patchValue(user.about);
+        this.initialFormValue = this.settingsForm.value;
+      },
+      error: (err) => {
+        this.snackBar.open('Failed to load profile. The server might be offline.', 'Close', {
+          duration: 5000,
+          horizontalPosition: 'left',
+          verticalPosition: 'bottom',
+          panelClass: ['error-snackbar'],
+        });
       },
     });
   }
@@ -105,29 +117,55 @@ export class SettingsComponent implements OnInit {
   }
 
   public onSave(): void {
-    if (this.settingsForm.valid) {
-      this.userService.currentUser().subscribe((currentUser) => {
-        const formData = this.settingsForm.value;
-        const updatedUser: User = {
-          ...currentUser,
-          firstName: formData.personalInfo.firstName,
-          lastName: formData.personalInfo.lastName,
-          headline: formData.personalInfo.headline,
-          profileImage: formData.personalInfo.image || currentUser.profileImage,
-          dateOfBirth: formData.personalInfo.dateOfBirth,
-          location: this.formatLocation(formData.personalInfo.location),
-          email: formData.contactInfo.email,
-          phone: formData.contactInfo.phone,
-          website: formData.contactInfo.website,
-          about: formData.about,
-        };
+    if (this.settingsForm.valid && this.loadedUser) {
+      const formData = this.settingsForm.value;
+      const updatedUser: User = {
+        ...this.loadedUser,
+        firstName: formData.personalInfo.firstName,
+        lastName: formData.personalInfo.lastName,
+        headline: formData.personalInfo.headline,
+        profileImage: formData.personalInfo.image || this.loadedUser.profileImage,
+        dateOfBirth: formData.personalInfo.dateOfBirth,
+        location: this.formatLocation(formData.personalInfo.location),
+        email: formData.contactInfo.email,
+        phone: formData.contactInfo.phone,
+        website: formData.contactInfo.website,
+        about: formData.about,
+      };
 
-        this.userService.updateUser(updatedUser).subscribe({
-          next: () => {
-            this.router.navigate(['network']);
-          },
-        });
+      this.userService.updateUser(updatedUser).subscribe({
+        next: () => {
+          this.router.navigate(['network']);
+          this.snackBar.open('Profile updated successfully!', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'left',
+            verticalPosition: 'bottom',
+            panelClass: ['success-snackbar'],
+          });
+        },
+        error: (err) => {
+          this.snackBar.open('It seems that an error has occured, please try again!', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'left',
+            verticalPosition: 'bottom',
+            panelClass: ['error-snackbar'],
+          });
+        },
       });
     }
+  }
+
+  public onCancel(): void {
+    this.router.navigate(['network']);
+  }
+
+  public hasChanged(): boolean {
+    if (!this.initialFormValue) {
+      return false;
+    }
+
+    const initialFormString = JSON.stringify(this.initialFormValue);
+    const currentFormString = JSON.stringify(this.settingsForm.value);
+    return initialFormString !== currentFormString;
   }
 }

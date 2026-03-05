@@ -9,6 +9,28 @@
   --header-height: 60px;
 }
 
+.success-snackbar {
+  @include mat.snack-bar-overrides(
+    (
+      button-color: white,
+      container-color: rgb(47, 91, 186),
+      supporting-text-weight: 500,
+      supporting-text-size: 15px,
+    )
+  );
+}
+
+.error-snackbar {
+  @include mat.snack-bar-overrides(
+    (
+      button-color: white,
+      container-color: rgb(173, 27, 27),
+      supporting-text-weight: 500,
+      supporting-text-size: 15px,
+    )
+  );
+}
+
 html {
   @include mat.theme(
     (

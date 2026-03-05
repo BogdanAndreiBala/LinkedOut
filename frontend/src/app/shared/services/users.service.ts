@@ -47,6 +47,7 @@ export class UsersService {
    */
   public updateUser(updated: User): Observable<User> {
     return this.httpClient.put<User>(`${this.usersURL}/${updated.id}`, updated);
+    //return this.httpClient.put<User>(`${this.usersURL}/wrong`, updated);
   }
 
   /** Return the "current" logged-in user (first user for demo purposes). */
