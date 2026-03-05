@@ -1,4 +1,4 @@
-import { Component, HostAttributeToken, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
