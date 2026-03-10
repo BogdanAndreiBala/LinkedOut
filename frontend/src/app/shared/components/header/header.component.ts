@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UsersService } from '../../services/users.service';
 import { Router } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,11 +12,10 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  private readonly service = inject(UsersService);
   private router = inject(Router);
 
   public onLogoClick(): void {
-    this.router.navigate(['network']);
+    this.router.navigate(['/network']);
   }
 
   public onSettingsClick(): void {

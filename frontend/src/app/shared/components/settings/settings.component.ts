@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, DestroyRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
@@ -14,6 +14,25 @@ import { UsersService } from '../../services/users.service';
 import { User } from '../../models/user.model';
 import { ProfileMainListItemComponent } from '../profile-main-list-item/profile-main-list-item.component';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
+
+export interface SettingsFormType {
+  personalInfo: {
+    firstName: string | null;
+    lastName: string | null;
+    headline: string | null;
+    image: string | null;
+    dateOfBirth: string | Date | null;
+    location: string | null;
+  };
+  contactInfo: {
+    email: string | null;
+    phone: string | null;
+    website: string | null;
+  };
+  about: string | null;
+}
 
 @Component({
   selector: 'app-settings',
@@ -36,9 +55,10 @@ export class SettingsComponent implements OnInit {
   private userService = inject(UsersService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
+  private destroyRef = inject(DestroyRef);
 
   private loadedUser: User | null = null;
-  private initialFormValue: any;
+  private initialFormValue: SettingsFormType | null = null;
 
   public maxDate = new Date();
   public minDate = new Date(
@@ -46,6 +66,7 @@ export class SettingsComponent implements OnInit {
     this.maxDate.getMonth(),
     this.maxDate.getDate(),
   );
+  public isSaving: boolean = false;
 
   public settingsForm: FormGroup = this.formBuilder.group({
     personalInfo: this.formBuilder.group({
@@ -72,38 +93,41 @@ export class SettingsComponent implements OnInit {
   public ngOnInit(): void {
     this.settingsForm.disable();
 
-    this.userService.currentUser().subscribe({
-      next: (user: User) => {
-        this.loadedUser = user;
+    this.userService
+      .currentUser()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (user: User) => {
+          this.loadedUser = user;
 
-        this.settingsForm.get('personalInfo')?.patchValue({
-          firstName: user.firstName,
-          lastName: user.lastName,
-          headline: user.headline,
-          image: '',
-          dateOfBirth: user.dateOfBirth,
-          location: user.location,
-        });
+          this.settingsForm.get('personalInfo')?.patchValue({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            headline: user.headline,
+            image: '',
+            dateOfBirth: user.dateOfBirth,
+            location: user.location,
+          });
 
-        this.settingsForm.get('contactInfo')?.patchValue({
-          email: user.email,
-          phone: user.phone,
-          website: user.website,
-        });
+          this.settingsForm.get('contactInfo')?.patchValue({
+            email: user.email,
+            phone: user.phone,
+            website: user.website,
+          });
 
-        this.settingsForm.get('about')?.patchValue(user.about);
-        this.initialFormValue = this.settingsForm.value;
-        this.settingsForm.enable();
-      },
-      error: (err) => {
-        this.snackBar.open('Failed to load profile. The server might be offline.', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'left',
-          verticalPosition: 'bottom',
-          panelClass: ['error-snackbar'],
-        });
-      },
-    });
+          this.settingsForm.get('about')?.patchValue(user.about);
+          this.initialFormValue = this.settingsForm.value;
+          this.settingsForm.enable();
+        },
+        error: (err) => {
+          this.snackBar.open('Failed to load profile. The server might be offline.', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'left',
+            verticalPosition: 'bottom',
+            panelClass: ['error-snackbar'],
+          });
+        },
+      });
   }
 
   private formatLocation(location: string): string {
@@ -118,6 +142,7 @@ export class SettingsComponent implements OnInit {
 
   public onSave(): void {
     if (this.settingsForm.valid && this.loadedUser) {
+      this.isSaving = true;
       const formData = this.settingsForm.value;
       const updatedUser: User = {
         ...this.loadedUser,
@@ -133,25 +158,32 @@ export class SettingsComponent implements OnInit {
         about: formData.about,
       };
 
-      this.userService.updateUser(updatedUser).subscribe({
-        next: () => {
-          this.router.navigate(['network']);
-          this.snackBar.open('Profile updated successfully!', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'left',
-            verticalPosition: 'bottom',
-            panelClass: ['success-snackbar'],
-          });
-        },
-        error: (err) => {
-          this.snackBar.open('It seems that an error has occured, please try again!', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'left',
-            verticalPosition: 'bottom',
-            panelClass: ['error-snackbar'],
-          });
-        },
-      });
+      this.userService
+        .updateUser(updatedUser)
+        .pipe(
+          finalize(() => {
+            this.isSaving = false;
+          }),
+        )
+        .subscribe({
+          next: () => {
+            this.router.navigate(['network']);
+            this.snackBar.open('Profile updated successfully!', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'left',
+              verticalPosition: 'bottom',
+              panelClass: ['success-snackbar'],
+            });
+          },
+          error: (err) => {
+            this.snackBar.open('It seems that an error has occured, please try again!', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'left',
+              verticalPosition: 'bottom',
+              panelClass: ['error-snackbar'],
+            });
+          },
+        });
     }
   }
 

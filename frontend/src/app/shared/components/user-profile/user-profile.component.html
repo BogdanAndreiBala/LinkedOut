@@ -1,51 +1,6 @@
 @if (user) {
   <div class="profile-page">
-    <mat-card class="profile-card">
-      <div class="profile-banner"></div>
-
-      <mat-card-content class="profile-content">
-        <div class="profile-main">
-          <div class="avatar-wrapper">
-            <app-avatar [firstName]="user.firstName" [lastName]="user.lastName"></app-avatar>
-          </div>
-
-          <div class="profile-details">
-            <h1 class="name">{{ user.firstName }} {{ user.lastName }}</h1>
-            <p class="headline">{{ user.headline }}</p>
-
-            <div class="info-row text-gray">
-              <mat-icon>location_on</mat-icon>
-              <span>{{ user.location }}</span>
-            </div>
-
-            <div class="info-row text-blue">
-              <mat-icon>group</mat-icon>
-              <span
-                ><strong>{{ user.connections }}</strong> connections</span
-              >
-            </div>
-          </div>
-        </div>
-
-        <hr class="divider" />
-
-        <div class="contact-info">
-          <div class="info-row">
-            <mat-icon class="contact-icon">email</mat-icon>
-            <a class="contact-link" href="mailto:{{ user.email }}">{{ user.email }}</a>
-            <span class="phone">{{ user.phone }}</span>
-          </div>
-
-          <div class="info-row">
-            <mat-icon class="contact-icon">link</mat-icon>
-            <a class="contact-link" href="{{ user.website }}" target="_blank" rel="noreffer">{{
-              user.website
-            }}</a>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-
+    <app-profile-header-card [user]="user"></app-profile-header-card>
     <app-profile-main-list-item title="About">
       <p class="about-text">{{ user.about }}</p>
       <p class="birthday-text gray-text">
@@ -55,22 +10,22 @@
     </app-profile-main-list-item>
 
     <app-profile-main-list-item title="Experience">
-      @for (job of user.experience; track $index) {
+      @for (job of mappedExperience; track $index) {
         <app-profile-inner-list-item
           [title]="job.title"
-          [subtitle]="job.company + ' • ' + job.location"
-          [dateRange]="job.startDate + '—' + (job.endDate | endDate)"
+          [subtitle]="job.subtitle"
+          [dateRange]="job.dateRange"
           [description]="job.description"
         ></app-profile-inner-list-item>
       }
     </app-profile-main-list-item>
 
     <app-profile-main-list-item title="Education">
-      @for (education of user.education; track $index) {
+      @for (education of mappedEducation; track $index) {
         <app-profile-inner-list-item
-          [title]="education.institution"
-          [subtitle]="education.degree + ' • ' + education.fieldOfStudy"
-          [dateRange]="education.startYear + '—' + (education.endYear | endDate)"
+          [title]="education.title"
+          [subtitle]="education.subtitle"
+          [dateRange]="education.dateRange"
         ></app-profile-inner-list-item>
       }
     </app-profile-main-list-item>
