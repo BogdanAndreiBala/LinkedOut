@@ -12,6 +12,7 @@ import { ProfileMainListItemComponent } from '../profile-main-list-item/profile-
 import { ProfileInnerListItemComponent } from '../profile-inner-list-item/profile-inner-list-item.component';
 import { ProfileHeaderCardComponent } from '../profile-header-card/profile-header-card.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RandomColorDirective } from '../../directives/random-color/random-color.directive';
 
 export interface ProfileSectionListItem {
   title: string;
@@ -32,6 +33,7 @@ export interface ProfileSectionListItem {
     ProfileInnerListItemComponent,
     ProfileHeaderCardComponent,
     DatePipe,
+    RandomColorDirective,
   ],
   providers: [EndDatePipe],
   templateUrl: './user-profile.component.html',
