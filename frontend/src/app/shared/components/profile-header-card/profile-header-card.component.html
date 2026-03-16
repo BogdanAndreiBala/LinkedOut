@@ -1,0 +1,45 @@
+<mat-card class="profile-card">
+  <div class="profile-banner"></div>
+
+  <mat-card-content class="profile-content">
+    <div class="profile-main">
+      <div class="avatar-wrapper">
+        <app-avatar [firstName]="user.firstName" [lastName]="user.lastName"></app-avatar>
+      </div>
+
+      <div class="profile-details">
+        <h1 class="name">{{ user.firstName }} {{ user.lastName }}</h1>
+        <p class="headline">{{ user.headline }}</p>
+
+        <div class="info-row text-gray">
+          <mat-icon>location_on</mat-icon>
+          <span>{{ user.location }}</span>
+        </div>
+
+        <div class="info-row text-blue">
+          <mat-icon>group</mat-icon>
+          <span
+            ><strong>{{ user.connections }}</strong> connections</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="contact-info">
+      <div class="info-row">
+        <mat-icon class="contact-icon">email</mat-icon>
+        <a class="contact-link" href="mailto:{{ user.email }}">{{ user.email }}</a>
+        <span class="phone">{{ user.phone }}</span>
+      </div>
+
+      <div class="info-row">
+        <mat-icon class="contact-icon">link</mat-icon>
+        <a class="contact-link" href="{{ user.website }}" target="_blank" rel="noreferrer">{{
+          user.website
+        }}</a>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

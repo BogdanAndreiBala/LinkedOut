@@ -1,0 +1,41 @@
+@if (user) {
+  <div class="profile-page">
+    <app-profile-header-card [user]="user"></app-profile-header-card>
+    <app-profile-main-list-item title="About">
+      <p class="about-text">{{ user.about }}</p>
+      <p class="birthday-text gray-text">
+        <mat-icon>cake</mat-icon>
+        {{ user.dateOfBirth | date: 'mediumDate' }}
+      </p>
+    </app-profile-main-list-item>
+
+    <app-profile-main-list-item title="Experience">
+      @for (job of mappedExperience; track $index) {
+        <app-profile-inner-list-item
+          [title]="job.title"
+          [subtitle]="job.subtitle"
+          [dateRange]="job.dateRange"
+          [description]="job.description"
+        ></app-profile-inner-list-item>
+      }
+    </app-profile-main-list-item>
+
+    <app-profile-main-list-item title="Education">
+      @for (education of mappedEducation; track $index) {
+        <app-profile-inner-list-item
+          [title]="education.title"
+          [subtitle]="education.subtitle"
+          [dateRange]="education.dateRange"
+        ></app-profile-inner-list-item>
+      }
+    </app-profile-main-list-item>
+
+    <app-profile-main-list-item title="Skills">
+      <mat-chip-set>
+        @for (skill of user.skills; track $index) {
+          <mat-chip>{{ skill }}</mat-chip>
+        }
+      </mat-chip-set>
+    </app-profile-main-list-item>
+  </div>
+}

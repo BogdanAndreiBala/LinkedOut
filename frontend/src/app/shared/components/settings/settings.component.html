@@ -1,0 +1,129 @@
+<div class="settings-container">
+  <h1>Settings</h1>
+
+  <form [formGroup]="settingsForm" (ngSubmit)="onSave()">
+    <app-profile-main-list-item title="Personal Information">
+      <div formGroupName="personalInfo" class="form-column">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" />
+            @if (settingsForm.get('personalInfo.firstName')?.hasError('required')) {
+              <mat-error>This field is mandatory!</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" />
+            @if (settingsForm.get('personalInfo.lastName')?.hasError('required')) {
+              <mat-error>This field is mandatory!</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Headline</mat-label>
+          <input matInput formControlName="headline" />
+          @if (settingsForm.get('personalInfo.headline')?.hasError('required')) {
+            <mat-error>This field is mandatory!</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Profile Image URL</mat-label>
+          <input matInput formControlName="image" />
+          @if (settingsForm.get('personalInfo.image')?.hasError('pattern')) {
+            <mat-error>Format must be a valid URL starting with http:// or https://</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Date of Birth</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="dateOfBirth"
+              [max]="maxDate"
+              [min]="minDate"
+            />
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (settingsForm.get('personalInfo.dateOfBirth')?.hasError('matDatepickerMax')) {
+              <mat-error
+                >You cannot be born in the future! Or can you...however we do not accept time
+                travelers, company policy, sorry!</mat-error
+              >
+            }
+            @if (settingsForm.get('personalInfo.dateOfBirth')?.hasError('matDatepickerMin')) {
+              <mat-error
+                >Congratulations for reaching this impressive age! You deserve a break from work,
+                don't you think?</mat-error
+              >
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+            <input matInput formControlName="location" />
+            @if (settingsForm.get('personalInfo.location')?.hasError('pattern')) {
+              <mat-error>Format must be "City, CC" (e.g., Cluj-Napoca, RO)</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+    </app-profile-main-list-item>
+
+    <app-profile-main-list-item title="Contact Information">
+      <div formGroupName="contactInfo" class="form-column">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+
+            <input matInput formControlName="email" />
+            @if (settingsForm.get('contactInfo.email')?.hasError('required')) {
+              <mat-error>This field is mandatory!</mat-error>
+            }
+            @if (settingsForm.get('contactInfo.email')?.hasError('email')) {
+              <mat-error>Format must be a valid email address</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Phone</mat-label>
+            <input matInput formControlName="phone" />
+            @if (settingsForm.get('contactInfo.phone')?.hasError('pattern')) {
+              <mat-error>Format must be a valid phone number</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Website</mat-label>
+          <input matInput formControlName="website" />
+          @if (settingsForm.get('contactInfo.website')?.hasError('pattern')) {
+            <mat-error>Format must be a valid URL starting with http:// or https://</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </app-profile-main-list-item>
+
+    <app-profile-main-list-item title="About">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Tell people about yourself</mat-label>
+        <textarea matInput formControlName="about" rows="5"></textarea>
+      </mat-form-field>
+    </app-profile-main-list-item>
+
+    <div class="actions">
+      <button class="cancel" matButton="filled" type="button" (click)="onCancel()">Cancel</button>
+      <button
+        matButton="filled"
+        type="submit"
+        [disabled]="settingsForm.invalid || settingsForm.pristine || !formHasChanged || isSaving"
+      >
+        Save Changes
+      </button>
+    </div>
+  </form>
+</div>
