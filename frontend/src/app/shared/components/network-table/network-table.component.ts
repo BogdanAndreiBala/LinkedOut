@@ -19,6 +19,7 @@ import { TechIconsDirective } from '../../directives/tech-icon/tech-icons.direct
     MatIcon,
     TechIconsDirective,
   ],
+
   templateUrl: './network-table.component.html',
   styleUrl: './network-table.component.scss',
   standalone: true,

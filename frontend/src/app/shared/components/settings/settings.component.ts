@@ -72,6 +72,8 @@ export class SettingsComponent implements OnInit {
   );
   public isSaving: boolean = false;
 
+  public formHasChanged: boolean = false;
+
   public settingsForm: FormGroup = this.formBuilder.group({
     personalInfo: this.formBuilder.group({
       firstName: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(2)]],
@@ -122,6 +124,16 @@ export class SettingsComponent implements OnInit {
           this.settingsForm.get('about')?.patchValue(user.about);
           this.initialFormValue = this.settingsForm.value;
           this.settingsForm.enable();
+
+          this.settingsForm.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((currentValue) => {
+              if (!this.initialFormValue) return;
+
+              const initialFormString = JSON.stringify(this.initialFormValue);
+              const currentFormString = JSON.stringify(currentValue);
+              this.formHasChanged = initialFormString !== currentFormString;
+            });
         },
         error: (err) => {
           this.snackBar.open('Failed to load profile. The server might be offline.', 'Close', {
@@ -164,6 +176,8 @@ export class SettingsComponent implements OnInit {
 
       this.userService
         .updateUser(updatedUser)
+
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .pipe(
           finalize(() => {
             this.isSaving = false;
@@ -193,15 +207,5 @@ export class SettingsComponent implements OnInit {
 
   public onCancel(): void {
     this.router.navigate(['network']);
-  }
-
-  public hasChanged(): boolean {
-    if (!this.initialFormValue) {
-      return false;
-    }
-
-    const initialFormString = JSON.stringify(this.initialFormValue);
-    const currentFormString = JSON.stringify(this.settingsForm.value);
-    return initialFormString !== currentFormString;
   }
 }

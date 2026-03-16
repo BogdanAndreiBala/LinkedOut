@@ -11,6 +11,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
   selector: 'app-profile-header-card',
   imports: [MatCardModule, MatIconModule, AvatarComponent, IfCurrentUserDirective, MatButton],
+
   templateUrl: './profile-header-card.component.html',
   styleUrl: './profile-header-card.component.scss',
   standalone: true,

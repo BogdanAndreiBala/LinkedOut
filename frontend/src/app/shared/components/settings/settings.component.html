@@ -123,10 +123,11 @@
           <mat-icon>info</mat-icon>
         </button>
       }
+
       <button
         matButton="filled"
         type="submit"
-        [disabled]="settingsForm.invalid || settingsForm.pristine || !hasChanged() || isSaving"
+        [disabled]="settingsForm.invalid || settingsForm.pristine || !formHasChanged || isSaving"
       >
         Save Changes
       </button>
