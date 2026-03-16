@@ -2,7 +2,6 @@ import { Component, inject, OnInit, DestroyRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { EndDatePipe } from '../../pipes/end-date.pipe';
 import { MatCardModule } from '@angular/material/card';
-import { AvatarComponent } from '../avatar/avatar.component';
 import { UsersService } from '../../services/users.service';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../../models/user.model';
@@ -25,7 +24,6 @@ export interface ProfileSectionListItem {
   selector: 'app-user-profile',
   imports: [
     MatCardModule,
-    AvatarComponent,
     MatIconModule,
     MatChipsModule,
     MatChipSet,
