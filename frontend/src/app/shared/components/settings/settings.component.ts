@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UsersService } from '../../services/users.service';
+import { UsersService } from '../../services/user.service';
 import { User } from '../../models/user.model';
 import { ProfileMainListItemComponent } from '../profile-main-list-item/profile-main-list-item.component';
 import { Router } from '@angular/router';
@@ -18,6 +18,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { InfoIconDirective } from '../../directives/info-icon/info-icon.directive';
 import { MatIcon } from '@angular/material/icon';
+import { AuthFacade } from '../../store/auth/auth.facade';
+import { Store } from '@ngrx/store';
+import { updateCurrentUser } from '../../store/auth/auth.actions';
 
 export interface SettingsFormType {
   personalInfo: {
@@ -60,6 +63,8 @@ export class SettingsComponent implements OnInit {
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private destroyRef = inject(DestroyRef);
+  private authFacade = inject(AuthFacade);
+  private store = inject(Store);
 
   private loadedUser: User | null = null;
   private initialFormValue: SettingsFormType | null = null;
@@ -99,51 +104,48 @@ export class SettingsComponent implements OnInit {
   public ngOnInit(): void {
     this.settingsForm.disable();
 
-    this.userService
-      .currentUser()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (user: User) => {
-          this.loadedUser = user;
+    this.authFacade.currentUser$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (user: User | null) => {
+        this.loadedUser = user;
 
-          this.settingsForm.get('personalInfo')?.patchValue({
-            firstName: user.firstName,
-            lastName: user.lastName,
-            headline: user.headline,
-            image: '',
-            dateOfBirth: user.dateOfBirth,
-            location: user.location,
+        this.settingsForm.get('personalInfo')?.patchValue({
+          firstName: user?.firstName,
+          lastName: user?.lastName,
+          headline: user?.headline,
+          image: '',
+          dateOfBirth: user?.dateOfBirth,
+          location: user?.location,
+        });
+
+        this.settingsForm.get('contactInfo')?.patchValue({
+          email: user?.email,
+          phone: user?.phone,
+          website: user?.website,
+        });
+
+        this.settingsForm.get('about')?.patchValue(user?.about);
+        this.initialFormValue = this.settingsForm.value;
+        this.settingsForm.enable();
+
+        this.settingsForm.valueChanges
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((currentValue) => {
+            if (!this.initialFormValue) return;
+
+            const initialFormString = JSON.stringify(this.initialFormValue);
+            const currentFormString = JSON.stringify(currentValue);
+            this.formHasChanged = initialFormString !== currentFormString;
           });
-
-          this.settingsForm.get('contactInfo')?.patchValue({
-            email: user.email,
-            phone: user.phone,
-            website: user.website,
-          });
-
-          this.settingsForm.get('about')?.patchValue(user.about);
-          this.initialFormValue = this.settingsForm.value;
-          this.settingsForm.enable();
-
-          this.settingsForm.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((currentValue) => {
-              if (!this.initialFormValue) return;
-
-              const initialFormString = JSON.stringify(this.initialFormValue);
-              const currentFormString = JSON.stringify(currentValue);
-              this.formHasChanged = initialFormString !== currentFormString;
-            });
-        },
-        error: (err) => {
-          this.snackBar.open('Failed to load profile. The server might be offline.', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'left',
-            verticalPosition: 'bottom',
-            panelClass: ['error-snackbar'],
-          });
-        },
-      });
+      },
+      error: (err) => {
+        this.snackBar.open('Failed to load profile. The server might be offline.', 'Close', {
+          duration: 5000,
+          horizontalPosition: 'left',
+          verticalPosition: 'bottom',
+          panelClass: ['error-snackbar'],
+        });
+      },
+    });
   }
 
   private formatLocation(location: string): string {
@@ -175,7 +177,7 @@ export class SettingsComponent implements OnInit {
       };
 
       this.userService
-        .updateUser(updatedUser)
+        .updateUser(this.loadedUser.id, updatedUser)
 
         .pipe(takeUntilDestroyed(this.destroyRef))
         .pipe(
@@ -184,7 +186,9 @@ export class SettingsComponent implements OnInit {
           }),
         )
         .subscribe({
-          next: () => {
+          next: (savedUserFromServer) => {
+            this.store.dispatch(updateCurrentUser({ user: savedUserFromServer }));
+
             this.router.navigate(['network']);
             this.snackBar.open('Profile updated successfully!', 'Close', {
               duration: 5000,

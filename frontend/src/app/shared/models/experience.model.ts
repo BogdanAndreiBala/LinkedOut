@@ -1,8 +1,11 @@
+import { Company } from './company.model';
+
 export interface Experience {
-  company: string;
+  id: number;
   title: string;
   location: string;
   startDate: string;
   endDate: string | null;
   description: string;
+  company: Company;
 }

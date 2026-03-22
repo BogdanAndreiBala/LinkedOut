@@ -1,5 +1,5 @@
 import { Component, inject, DestroyRef, OnInit } from '@angular/core';
-import { UsersService } from '../../services/users.service';
+import { UsersService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
 import { MatTableModule } from '@angular/material/table';
@@ -9,6 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HighlightTableRowDirective } from '../../directives/highlight-row/highlight-table-row.directive';
 import { MatIcon } from '@angular/material/icon';
 import { TechIconsDirective } from '../../directives/tech-icon/tech-icons.directive';
+import { PaginatedResponse } from '../../models/pagination.model';
 
 @Component({
   selector: 'app-network-table',
@@ -36,11 +37,11 @@ export class NetworkTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService
-      .allUsers()
+      .getAllUsers()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data: User[]) => {
-          this.users = data;
+        next: (response: PaginatedResponse<User>) => {
+          this.users = response.data;
           this.isOffline = false;
           localStorage.setItem('cached-data', JSON.stringify(this.users));
         },

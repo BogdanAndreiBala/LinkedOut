@@ -1,0 +1,51 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h1 class="auth-title">Login</h1>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Enter your email*</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="example@email.com" />
+        @if (loginForm.get('email')?.hasError('required')) {
+          <mat-error>This field is mandatory!</mat-error>
+        }
+        @if (loginForm.get('email')?.hasError('email')) {
+          <mat-error>Please enter a valid email address.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Enter your password*</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="hidePassword = !hidePassword"
+          type="button"
+          aria-label="Toggle password visibility"
+        >
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (loginForm.get('password')?.hasError('required')) {
+          <mat-error>This field is mandatory!</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="actions">
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="auth-button"
+          [disabled]="loginForm.invalid || isLoggingIn"
+        >
+          Login
+        </button>
+
+        <button mat-stroked-button type="button" class="auth-button" routerLink="/register">
+          Register
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

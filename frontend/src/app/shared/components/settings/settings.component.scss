@@ -1,7 +1,22 @@
 .settings-container {
-  max-width: 800px;
+  padding: 32px;
+  max-width: 850px;
   margin: 0 auto;
-  padding: 20px;
+
+  max-height: calc(100vh - 130px);
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  scroll-behavior: smooth;
+}
+
+.settings-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.settings-container::-webkit-scrollbar-thumb {
+  background: #c0bfbf;
+  border-radius: 10px;
 }
 
 .form-column {

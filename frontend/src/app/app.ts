@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/components/header/header.component';
+import { AuthFacade } from './shared/store/auth/auth.facade';
 
 @Component({
   selector: 'app-root',
@@ -10,4 +11,10 @@ import { HeaderComponent } from './shared/components/header/header.component';
 })
 export class App {
   protected readonly title = signal('forms-homework-project');
+
+  private readonly authFacade = inject(AuthFacade);
+
+  ngOnInit(): void {
+    this.authFacade.init();
+  }
 }
