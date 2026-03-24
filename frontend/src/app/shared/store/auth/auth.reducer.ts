@@ -55,6 +55,7 @@ export const authReducer = createReducer(
 
   on(logout, () => ({
     ...initialAuthState,
+    isAuthenticated: false,
     isAuthInitialized: true,
   })),
 );

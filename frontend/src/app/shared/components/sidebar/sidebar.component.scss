@@ -1,0 +1,138 @@
+.sidebar-container {
+  width: 260px;
+  height: 100%;
+  background-color: #f3f2ef;
+  border-right: 1px solid #e0dfdc;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow: hidden;
+
+  &.collapsed {
+    width: 72px;
+  }
+}
+
+.nav-section {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 10px 10px 10px;
+  gap: 4px;
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    text-decoration: none;
+    color: #666666;
+    border-radius: 8px;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+    white-space: nowrap;
+
+    mat-icon {
+      margin-right: 16px;
+    }
+
+    .nav-label {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    &:hover {
+      background-color: #ebebeb;
+      color: #191919;
+    }
+
+    &.active {
+      background-color: #e0dff5;
+      color: #191919;
+      font-weight: 600;
+    }
+  }
+}
+
+.sidebar-container.collapsed .nav-item mat-icon {
+  margin-right: 0;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.user-section {
+  border-top: 1px solid #e0dfdc;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .logout-btn {
+    width: 100%;
+  }
+
+  .user-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+
+    .user-text {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      .name {
+        font-weight: 600;
+        font-size: 14px;
+        color: #191919;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .headline {
+        font-size: 12px;
+        color: #666666;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #0a66c2;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+
+    &.collapsed-avatar {
+      cursor: pointer;
+      margin: 0 auto;
+    }
+  }
+}
+
+.toggle-section {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 16px 16px 16px;
+
+  .toggle-btn {
+    color: #666666;
+  }
+}
+
+.sidebar-container.collapsed .toggle-section {
+  justify-content: center;
+  padding: 0 8px 16px 8px;
+}

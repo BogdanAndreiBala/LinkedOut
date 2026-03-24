@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { UsersService } from '../../services/user.service';
 import {
   initAuth,
@@ -9,14 +9,17 @@ import {
   loadCurrentUser,
   loadCurrentUserFailure,
   loadCurrentUserSuccess,
+  logout,
 } from './auth.actions';
 import { AuthService } from '../../../core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthEffects {
   private readonly actions$ = inject(Actions);
   private readonly usersService = inject(UsersService);
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   loadCurrentUser$ = createEffect(() =>
     this.actions$.pipe(
@@ -46,5 +49,18 @@ export class AuthEffects {
         return initAuthFailure();
       }),
     ),
+  );
+
+  logout$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(logout),
+        tap(() => {
+          sessionStorage.removeItem('token');
+          localStorage.clear();
+          this.router.navigate(['/login']);
+        }),
+      ),
+    { dispatch: false },
   );
 }
