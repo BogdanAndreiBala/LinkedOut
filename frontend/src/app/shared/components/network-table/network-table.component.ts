@@ -6,10 +6,20 @@ import { MatTableModule } from '@angular/material/table';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { HighlightTableRowDirective } from '../../directives/highlight-row/highlight-table-row.directive';
+import { MatIcon } from '@angular/material/icon';
+import { TechIconsDirective } from '../../directives/tech-icon/tech-icons.directive';
 
 @Component({
   selector: 'app-network-table',
-  imports: [MatTableModule, AvatarComponent],
+  imports: [
+    MatTableModule,
+    AvatarComponent,
+    HighlightTableRowDirective,
+    MatIcon,
+    TechIconsDirective,
+  ],
+
   templateUrl: './network-table.component.html',
   styleUrl: './network-table.component.scss',
   standalone: true,

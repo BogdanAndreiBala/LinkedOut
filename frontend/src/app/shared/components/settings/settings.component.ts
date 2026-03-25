@@ -16,6 +16,8 @@ import { ProfileMainListItemComponent } from '../profile-main-list-item/profile-
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
+import { InfoIconDirective } from '../../directives/info-icon/info-icon.directive';
+import { MatIcon } from '@angular/material/icon';
 
 export interface SettingsFormType {
   personalInfo: {
@@ -44,6 +46,8 @@ export interface SettingsFormType {
     MatButtonModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    InfoIconDirective,
+    MatIcon,
   ],
   providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
   templateUrl: './settings.component.html',
@@ -67,6 +71,7 @@ export class SettingsComponent implements OnInit {
     this.maxDate.getDate(),
   );
   public isSaving: boolean = false;
+
   public formHasChanged: boolean = false;
 
   public settingsForm: FormGroup = this.formBuilder.group({
@@ -171,6 +176,7 @@ export class SettingsComponent implements OnInit {
 
       this.userService
         .updateUser(updatedUser)
+
         .pipe(takeUntilDestroyed(this.destroyRef))
         .pipe(
           finalize(() => {

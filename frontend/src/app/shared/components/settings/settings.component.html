@@ -117,6 +117,13 @@
 
     <div class="actions">
       <button class="cancel" matButton="filled" type="button" (click)="onCancel()">Cancel</button>
+
+      @if (settingsForm.invalid || settingsForm.pristine) {
+        <button mat-icon-button type="button" appInfoIcon>
+          <mat-icon>info</mat-icon>
+        </button>
+      }
+
       <button
         matButton="filled"
         type="submit"

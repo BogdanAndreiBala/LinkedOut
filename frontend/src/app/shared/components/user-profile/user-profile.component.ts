@@ -2,7 +2,6 @@ import { Component, inject, OnInit, DestroyRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { EndDatePipe } from '../../pipes/end-date.pipe';
 import { MatCardModule } from '@angular/material/card';
-import { AvatarComponent } from '../avatar/avatar.component';
 import { UsersService } from '../../services/users.service';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../../models/user.model';
@@ -12,6 +11,7 @@ import { ProfileMainListItemComponent } from '../profile-main-list-item/profile-
 import { ProfileInnerListItemComponent } from '../profile-inner-list-item/profile-inner-list-item.component';
 import { ProfileHeaderCardComponent } from '../profile-header-card/profile-header-card.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RandomColorDirective } from '../../directives/random-color/random-color.directive';
 
 export interface ProfileSectionListItem {
   title: string;
@@ -24,7 +24,6 @@ export interface ProfileSectionListItem {
   selector: 'app-user-profile',
   imports: [
     MatCardModule,
-    AvatarComponent,
     MatIconModule,
     MatChipsModule,
     MatChipSet,
@@ -32,6 +31,7 @@ export interface ProfileSectionListItem {
     ProfileInnerListItemComponent,
     ProfileHeaderCardComponent,
     DatePipe,
+    RandomColorDirective,
   ],
   providers: [EndDatePipe],
   templateUrl: './user-profile.component.html',

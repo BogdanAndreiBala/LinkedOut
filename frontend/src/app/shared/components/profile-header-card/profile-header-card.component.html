@@ -23,6 +23,17 @@
           >
         </div>
       </div>
+
+      <button
+        *appIfCurrentUser="user.id"
+        matButton="elevated"
+        type="button"
+        (click)="onClick()"
+        class="settings"
+      >
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
+      </button>
     </div>
 
     <hr class="divider" />

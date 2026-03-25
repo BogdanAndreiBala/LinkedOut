@@ -9,6 +9,7 @@ export const routes: Routes = [
         (m) => m.NetworkTableComponent,
       ),
   },
+
   {
     path: 'profile/:id',
     loadComponent: () =>
