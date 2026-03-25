@@ -10,6 +10,18 @@ import { HighlightTableRowDirective } from '../../directives/highlight-row/highl
 import { MatIcon } from '@angular/material/icon';
 import { TechIconsDirective } from '../../directives/tech-icon/tech-icons.directive';
 import { PaginatedResponse } from '../../models/pagination.model';
+import { UserTableFacade } from '../../store/user-table/user-table.facade';
+import { FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AsyncPipe } from '@angular/common';
+import { MatFormField } from '@angular/material/form-field';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-network-table',
@@ -19,6 +31,14 @@ import { PaginatedResponse } from '../../models/pagination.model';
     HighlightTableRowDirective,
     MatIcon,
     TechIconsDirective,
+    MatPaginator,
+    MatProgressSpinnerModule,
+    AsyncPipe,
+    MatFormField,
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
 
   templateUrl: './network-table.component.html',
@@ -26,64 +46,48 @@ import { PaginatedResponse } from '../../models/pagination.model';
   standalone: true,
 })
 export class NetworkTableComponent implements OnInit {
-  private userService = inject(UsersService);
+  private facade = inject(UserTableFacade);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private destroyRef = inject(DestroyRef);
 
-  public users: User[] = [];
   public columnsToDisplay: string[] = ['name', 'headline', 'location', 'connections'];
-  public isOffline: boolean = false;
+
+  public searchBar = new FormControl('');
+
+  public users$ = this.facade.users$;
+  public totalCount$ = this.facade.totalCount$;
+  public loading$ = this.facade.loading$;
+  public preferences$ = this.facade.preferences$;
+  public error$ = this.facade.error$;
 
   ngOnInit(): void {
-    this.userService
-      .getAllUsers()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (response: PaginatedResponse<User>) => {
-          this.users = response.data;
-          this.isOffline = false;
-          localStorage.setItem('cached-data', JSON.stringify(this.users));
-        },
-        error: (err) => {
-          const savedData = localStorage.getItem('cached-data');
-          if (savedData) {
-            this.users = JSON.parse(savedData);
-            this.isOffline = true;
-            const snackBarRef = this.snackBar.open(
-              'You are offline! This list might not contain the most recent data!!!',
-              'Close',
-              {
-                horizontalPosition: 'left',
-                verticalPosition: 'bottom',
-                panelClass: ['error-snackbar'],
-              },
-            );
+    this.preferences$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((preferences) => {
+      if (this.searchBar.value !== preferences.searchFilter) {
+        this.searchBar.setValue(preferences.searchFilter, { emitEvent: false });
+      }
+    });
 
-            window.addEventListener(
-              'online',
-              () => {
-                snackBarRef.dismiss();
+    this.searchBar.valueChanges
+      .pipe(debounceTime(3000), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((value) => this.facade.setSearch(value ?? ''));
 
-                this.snackBar.open('You are back online! Please refresh the page.', 'Close', {
-                  duration: 10000,
-                  horizontalPosition: 'left',
-                  verticalPosition: 'bottom',
-                  panelClass: ['success-snackbar'],
-                });
-              },
-              { once: true },
-            );
-          } else {
-            this.snackBar.open('Cannot load network list. The server might be offline.', 'Close', {
-              duration: 5000,
-              horizontalPosition: 'left',
-              verticalPosition: 'bottom',
-              panelClass: ['error-snackbar'],
-            });
-          }
-        },
-      });
+    this.error$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((err) => {
+      if (err) {
+        this.snackBar.open(err, 'Close', {
+          duration: 5000,
+          horizontalPosition: 'left',
+          verticalPosition: 'bottom',
+          panelClass: ['error-snackbar'],
+        });
+      }
+    });
+
+    this.facade.loadUsers();
+  }
+
+  public onPageChange(event: PageEvent): void {
+    this.facade.setPagination(event.pageIndex + 1, event.pageSize);
   }
 
   public onRowClick(user: User) {
