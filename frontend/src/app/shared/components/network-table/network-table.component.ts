@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
 import { MatTableModule } from '@angular/material/table';
 import { AvatarComponent } from '../avatar/avatar.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HighlightTableRowDirective } from '../../directives/highlight-row/highlight-table-row.directive';
 import { MatIcon } from '@angular/material/icon';
@@ -53,13 +53,18 @@ export class NetworkTableComponent implements OnInit {
 
   public columnsToDisplay: string[] = ['name', 'headline', 'location', 'connections'];
 
-  public searchBar = new FormControl('');
+  public searchBar: FormControl = new FormControl('');
+
+  public isOffline: boolean = false;
+  private activeSnackBar: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
   public users$ = this.facade.users$;
-  public totalCount$ = this.facade.totalCount$;
+  public totalMatchCount$ = this.facade.totalMatchCount$;
   public loading$ = this.facade.loading$;
   public preferences$ = this.facade.preferences$;
   public error$ = this.facade.error$;
+
+  public pageSizeOptions = [5, 10, 20, 50];
 
   ngOnInit(): void {
     this.preferences$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((preferences) => {
@@ -69,18 +74,41 @@ export class NetworkTableComponent implements OnInit {
     });
 
     this.searchBar.valueChanges
-      .pipe(debounceTime(3000), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((value) => this.facade.setSearch(value ?? ''));
 
     this.error$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((err) => {
       if (err) {
-        this.snackBar.open(err, 'Close', {
+        this.activeSnackBar = this.snackBar.open(err, 'Close', {
           duration: 5000,
           horizontalPosition: 'left',
           verticalPosition: 'bottom',
           panelClass: ['error-snackbar'],
         });
       }
+    });
+
+    const savedPrefs = localStorage.getItem('userTablePreferences');
+    if (savedPrefs) {
+      this.facade.initPreferences(JSON.parse(savedPrefs));
+    }
+
+    const onlineHandler = () => {
+      if (this.activeSnackBar) {
+        this.activeSnackBar.dismiss();
+        this.activeSnackBar = null;
+      }
+      this.snackBar.open('You are back online! Please refresh the page.', 'Close', {
+        duration: 5000,
+        horizontalPosition: 'left',
+        verticalPosition: 'bottom',
+        panelClass: ['success-snackbar'],
+      });
+    };
+
+    window.addEventListener('online', onlineHandler);
+    this.destroyRef.onDestroy(() => {
+      window.removeEventListener('online', onlineHandler);
     });
 
     this.facade.loadUsers();

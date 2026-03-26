@@ -36,13 +36,37 @@ export class UserTableEffects {
             limit: preferences.pagination.pageSize,
           })
           .pipe(
+            tap((response) => {
+              localStorage.setItem('cached-networkTable', JSON.stringify(response));
+            }),
             map((response) =>
               loadUsersSuccess({
                 users: response.data,
-                totalCount: response.pagination.totalItems || 0,
+                totalMatchCount: response.pagination.totalItems || 0,
               }),
             ),
-            catchError((error) => of(loadUsersFailure({ error: error.message }))),
+            catchError((error) => {
+              const cachedData = localStorage.getItem('cached-networkTable');
+
+              if (cachedData) {
+                const parsed = JSON.parse(cachedData);
+                return of(
+                  loadUsersSuccess({
+                    users: parsed.data,
+                    totalMatchCount: parsed.pagination.totalItems || 0,
+                  }),
+                  loadUsersFailure({
+                    error: 'You are offline! This list might not contain the most recent data!!!',
+                  }),
+                );
+              }
+
+              return of(
+                loadUsersFailure({
+                  error: 'Cannot load network list. The server might be offline.',
+                }),
+              );
+            }),
           ),
       ),
     ),
@@ -54,6 +78,7 @@ export class UserTableEffects {
       withLatestFrom(this.store.select(selectPreferences), this.authFacade.currentUser$),
       switchMap(([, preferences, currentUser]) => {
         if (currentUser) {
+          localStorage.setItem('userTablePreferences', JSON.stringify(preferences));
           this.usersService
             .updateUser(currentUser.id, { tablePreferences: preferences })
             .subscribe();

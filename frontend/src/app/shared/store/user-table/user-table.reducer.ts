@@ -19,10 +19,10 @@ export const userTableReducer = createReducer(
     error: null,
   })),
 
-  on(loadUsersSuccess, (state, { users, totalCount }) => ({
+  on(loadUsersSuccess, (state, { users, totalMatchCount }) => ({
     ...state,
     users,
-    totalCount,
+    totalMatchCount,
     loading: false,
   })),
 

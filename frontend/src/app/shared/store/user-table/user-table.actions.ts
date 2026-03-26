@@ -7,7 +7,7 @@ export const loadUsers = createAction('[User Table] Load Users');
 
 export const loadUsersSuccess = createAction(
   '[User Table] Load Users Success',
-  props<{ users: User[]; totalCount: number }>(),
+  props<{ users: User[]; totalMatchCount: number }>(),
 );
 
 export const loadUsersFailure = createAction(

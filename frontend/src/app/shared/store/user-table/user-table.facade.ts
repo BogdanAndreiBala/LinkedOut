@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import {
   selectError,
   selectPreferences,
-  selectTotalCount,
+  selectTotalMatchCount,
   selectUsers,
   selectUserTableLoading,
 } from './user-table.selectors';
@@ -14,13 +14,14 @@ import {
   setSearch,
   setSort,
 } from './user-table.actions';
+import { TablePreferences } from '../../models/table-preferences.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserTableFacade {
   private store = inject(Store);
 
   public users$ = this.store.select(selectUsers);
-  public totalCount$ = this.store.select(selectTotalCount);
+  public totalMatchCount$ = this.store.select(selectTotalMatchCount);
   public loading$ = this.store.select(selectUserTableLoading);
   public preferences$ = this.store.select(selectPreferences);
   public error$ = this.store.select(selectError);
@@ -41,7 +42,7 @@ export class UserTableFacade {
     this.store.dispatch(setPagination({ pageNumber, pageSize }));
   }
 
-  public initPreferences(preferences: any): void {
+  public initPreferences(preferences: TablePreferences): void {
     if (preferences) {
       this.store.dispatch(initTablePreferences({ preferences }));
     }

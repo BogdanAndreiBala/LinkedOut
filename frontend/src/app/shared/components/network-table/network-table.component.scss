@@ -1,7 +1,10 @@
 .network-page {
-  padding: 0px;
+  padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
 }
 
 .page-title {
@@ -15,9 +18,11 @@
   max-height: calc(100vh - 240px);
   overflow-y: auto;
   background: white;
-  border-radius: 12px;
   border: 1px solid #e4e4e4;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom: none;
 }
 
 table {
@@ -62,7 +67,6 @@ td.mat-cell {
 .search-bar {
   width: 100%;
   max-width: 280px;
-  margin-bottom: 16px;
 
   ::ng-deep .mat-mdc-form-field-flex {
     height: 36px;
@@ -78,11 +82,28 @@ td.mat-cell {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 0;
 }
 
 ::ng-deep .mat-mdc-paginator {
   border-top: 1px solid #e4e4e4;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
+}
+
+.paginator-wrapper {
+  flex-shrink: 0;
+  background: white;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border: 1px solid #e4e4e4;
+  ::ng-deep .mat-mdc-paginator-container {
+    justify-content: center;
+  }
+}
+
+.search-cointainer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
 }

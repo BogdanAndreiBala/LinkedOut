@@ -1,12 +1,15 @@
 <div class="network-page">
   <h1 class="page-title">Network</h1>
-  <mat-form-field appearance="outline" class="search-bar">
-    <mat-icon matPrefix>search</mat-icon>
-    <input matInput [formControl]="searchBar" placeholder="Search" />
-  </mat-form-field>
 
-  <div class="spinner-wrapper" *ngIf="loading$ | async">
-    <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
+  <div class="search-cointainer">
+    <mat-form-field appearance="outline" class="search-bar">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [formControl]="searchBar" placeholder="Search" />
+    </mat-form-field>
+
+    <div class="spinner-wrapper" *ngIf="loading$ | async">
+      <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+    </div>
   </div>
 
   <div class="table-container mat-elevation-z1">
@@ -47,13 +50,15 @@
         [appHighlightTableRow]="row.headline"
       ></tr>
     </table>
+  </div>
 
+  <div class="paginator-wrapper mat-elevation-z1">
     <ng-container *ngIf="preferences$ | async as prefs">
       <mat-paginator
-        [length]="totalCount$ | async"
+        [length]="totalMatchCount$ | async"
         [pageSize]="prefs.pagination.pageSize"
         [pageIndex]="prefs.pagination.pageNumber - 1"
-        [pageSizeOptions]="[5, 10, 20]"
+        [pageSizeOptions]="pageSizeOptions"
         (page)="onPageChange($event)"
         showFirstLastButtons
       >

@@ -7,7 +7,7 @@ export const selectUserTableState = createFeatureSelector<UserTableState>(USER_T
 
 export const selectUsers = createSelector(selectUserTableState, (state) => state.users);
 
-export const selectTotalCount = createSelector(
+export const selectTotalMatchCount = createSelector(
   selectUserTableState,
   (state) => state.totalMatchCount,
 );
