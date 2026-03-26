@@ -13,8 +13,8 @@
       @for (job of mappedExperience; track $index) {
         <app-profile-inner-list-item
           [title]="job.title"
-          [subtitle]="job.subtitle"
-          [dateRange]="job.dateRange"
+          [subtitle]="job.company.name + ' • ' + job.location"
+          [dateRange]="getExperienceDateRange(job)"
           [description]="job.description"
         ></app-profile-inner-list-item>
       }
@@ -23,9 +23,9 @@
     <app-profile-main-list-item title="Education">
       @for (education of mappedEducation; track $index) {
         <app-profile-inner-list-item
-          [title]="education.title"
-          [subtitle]="education.subtitle"
-          [dateRange]="education.dateRange"
+          [title]="education.institution"
+          [subtitle]="education.degree + ' • ' + education.fieldOfStudy"
+          [dateRange]="getEducationDateRange(education)"
         ></app-profile-inner-list-item>
       }
     </app-profile-main-list-item>
@@ -33,7 +33,7 @@
     <app-profile-main-list-item title="Skills">
       <mat-chip-set>
         @for (skill of user.skills; track $index) {
-          <mat-chip appRandomColor>{{ skill }}</mat-chip>
+          <mat-chip appRandomColor>{{ skill.name }}</mat-chip>
         }
       </mat-chip-set>
     </app-profile-main-list-item>

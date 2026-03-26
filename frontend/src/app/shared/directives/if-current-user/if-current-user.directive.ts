@@ -1,7 +1,6 @@
 import { DestroyRef, Directive, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Input } from '@angular/core';
 import { User } from '../../models/user.model';
-import { UsersService } from '../../services/user.service';
 import { inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthFacade } from '../../store/auth/auth.facade';
@@ -12,7 +11,6 @@ import { AuthFacade } from '../../store/auth/auth.facade';
   host: {},
 })
 export class IfCurrentUserDirective implements OnInit {
-  private userService: UsersService = inject(UsersService);
   private destroyRef = inject(DestroyRef);
 
   private templateRef = inject(TemplateRef);
@@ -35,7 +33,6 @@ export class IfCurrentUserDirective implements OnInit {
           this.loggedUserId = user.id;
           this.decideRender();
         }
-        this.decideRender();
       },
     });
   }
@@ -47,6 +44,4 @@ export class IfCurrentUserDirective implements OnInit {
       this.viewContainerRef.clear();
     }
   }
-
-  constructor() {}
 }
