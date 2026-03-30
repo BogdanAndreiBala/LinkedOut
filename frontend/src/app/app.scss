@@ -39,3 +39,9 @@ app-sidebar {
   padding-bottom: 24px;
   box-sizing: border-box;
 }
+
+:host-context(.dark-theme) {
+  .main-content {
+    background-color: #585858;
+  }
+}

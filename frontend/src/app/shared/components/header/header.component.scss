@@ -12,11 +12,23 @@
   height: var(--header-height);
   padding: 0 var(--header-side-padding);
 
-  .header__title {
+  .header-title {
     font-size: 1.5rem;
     font-weight: bold;
     border: none;
     background: white;
     cursor: pointer;
+  }
+}
+
+:host-context(.dark-theme) {
+  background-color: rgb(0, 0, 0);
+  .header-title {
+    background: rgb(0, 0, 0);
+    color: white;
+  }
+
+  .hamburger-menu {
+    color: white;
   }
 }

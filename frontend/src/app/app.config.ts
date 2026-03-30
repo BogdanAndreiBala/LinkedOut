@@ -24,6 +24,9 @@ import { filter } from 'rxjs/internal/operators/filter';
 import { userTableReducer } from './shared/store/user-table/user-table.reducer';
 import { USER_TABLE_FEATURE_KEY } from './shared/store/user-table/user-table.selectors';
 import { UserTableEffects } from './shared/store/user-table/user-table.effects';
+import { uiReducer } from './shared/store/ui/ui.reducer';
+import { UI_FEATURE_KEY } from './shared/store/ui/ui.selectors';
+import { UiEffects } from './shared/store/ui/ui.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -40,9 +43,10 @@ export const appConfig: ApplicationConfig = {
     provideStore({
       [AUTH_FEATURE_KEY]: authReducer,
       [USER_TABLE_FEATURE_KEY]: userTableReducer,
+      [UI_FEATURE_KEY]: uiReducer,
     }),
 
-    provideEffects(AuthEffects, UserTableEffects),
+    provideEffects(AuthEffects, UserTableEffects, UiEffects),
 
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideAppInitializer(() => {

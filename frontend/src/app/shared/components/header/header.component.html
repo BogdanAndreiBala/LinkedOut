@@ -1,6 +1,13 @@
-<button class="header__title" (click)="onLogoClick()">LinkedOut</button>
+<button class="header-title" (click)="onLogoClick()">LinkedOut</button>
 <div class="header__actions">
-  <button mat-icon-button [matMenuTriggerFor]="actionMenu" aria-label="User actions">
+  <app-theme-toggle></app-theme-toggle>
+
+  <button
+    class="hamburger-menu"
+    mat-icon-button
+    [matMenuTriggerFor]="actionMenu"
+    aria-label="User actions"
+  >
     <mat-icon>menu</mat-icon>
   </button>
 
