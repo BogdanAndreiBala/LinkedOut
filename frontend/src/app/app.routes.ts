@@ -41,4 +41,22 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./shared/components/settings/settings.component').then((m) => m.SettingsComponent),
   },
+
+  {
+    path: 'companies',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./shared/components/companies-table/companies-table.component').then(
+        (m) => m.CompaniesComponent,
+      ),
+  },
+
+  {
+    path: 'jobs',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./shared/components/jobs-table/jobs-table.component').then((m) => m.JobsComponent),
+  },
+
+  { path: '**', redirectTo: 'network' },
 ];

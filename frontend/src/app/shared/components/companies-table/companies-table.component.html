@@ -1,0 +1,55 @@
+<div class="page-layout">
+  <h1 class="page-title">Companies</h1>
+
+  <app-generic-table
+    [totalItems]="totalCount"
+    [isLoading]="isLoading"
+    [pageIndex]="currentPage - 1"
+    [pageSize]="currentLimit"
+    (pageChange)="onPageChange($event)"
+    (searchChange)="onSearchChange($event)"
+  >
+    <table mat-table [dataSource]="companies">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Company</th>
+        <td mat-cell *matCellDef="let company">
+          <div class="company-name-cell">
+            <mat-icon class="company-icon">domain</mat-icon>
+            <span>{{ company.name }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef>Location</th>
+        <td mat-cell *matCellDef="let company">{{ company.location }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="website">
+        <th mat-header-cell *matHeaderCellDef>Website</th>
+        <td mat-cell *matCellDef="let company">
+          <a
+            [href]="company.website"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="website-link"
+          >
+            {{ company.website }}
+          </a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="jobsCount">
+        <th mat-header-cell *matHeaderCellDef>Open Jobs</th>
+        <td mat-cell *matCellDef="let company">
+          <span class="jobs-badge">
+            {{ company.jobsCount }}
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsToDisplay" class="mat-mdc-row"></tr>
+    </table>
+  </app-generic-table>
+</div>

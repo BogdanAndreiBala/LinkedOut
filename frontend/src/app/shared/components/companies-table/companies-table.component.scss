@@ -1,0 +1,82 @@
+.page-layout {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+}
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: #000000;
+}
+
+.company-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .company-icon {
+    color: #888888;
+  }
+}
+
+.website-link {
+  color: #0066cc;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    text-decoration: none;
+    opacity: 0.8;
+  }
+}
+
+.jobs-badge {
+  border: 1px solid #d4d4d4;
+  padding: 4px 12px;
+  border-radius: 6px;
+  display: inline-block;
+  min-width: 12px;
+  text-align: center;
+}
+
+:host-context(.dark-theme) {
+  .page-layout {
+    background-color: #585858;
+  }
+
+  .page-title {
+    color: #ffffff;
+  }
+
+  .company-name-cell {
+    .company-icon {
+      color: #bbbbbb;
+    }
+  }
+
+  .website-link {
+    color: #66b3ff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+      opacity: 0.8;
+    }
+  }
+
+  .jobs-badge {
+    border-color: #555555;
+    background-color: #2a2a2a;
+    color: #ffffff;
+  }
+}

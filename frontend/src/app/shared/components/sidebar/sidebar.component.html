@@ -15,15 +15,28 @@
       </a>
 
       <a
-        [routerLink]="['/profile', user.id]"
+        routerLink="/companies"
         routerLinkActive="active"
         class="nav-item"
-        [matTooltip]="isCollapsed ? 'My Profile' : ''"
+        [matTooltip]="isCollapsed ? 'Companies' : ''"
         matTooltipPosition="right"
       >
-        <mat-icon>person</mat-icon>
+        <mat-icon>domain</mat-icon>
         @if (!isCollapsed) {
-          <span class="nav-label">My Profile</span>
+          <span class="nav-label">Companies</span>
+        }
+      </a>
+
+      <a
+        routerLink="/jobs"
+        routerLinkActive="active"
+        class="nav-item"
+        [matTooltip]="isCollapsed ? 'Jobs' : ''"
+        matTooltipPosition="right"
+      >
+        <mat-icon>work</mat-icon>
+        @if (!isCollapsed) {
+          <span class="nav-label">Jobs</span>
         }
       </a>
 
@@ -37,6 +50,19 @@
         <mat-icon>settings</mat-icon>
         @if (!isCollapsed) {
           <span class="nav-label">Settings</span>
+        }
+      </a>
+
+      <a
+        [routerLink]="['/profile', user.id]"
+        routerLinkActive="active"
+        class="nav-item"
+        [matTooltip]="isCollapsed ? 'My Profile' : ''"
+        matTooltipPosition="right"
+      >
+        <mat-icon>person</mat-icon>
+        @if (!isCollapsed) {
+          <span class="nav-label">My Profile</span>
         }
       </a>
     </nav>

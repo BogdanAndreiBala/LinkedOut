@@ -15,7 +15,7 @@
 }
 
 .table-container {
-  max-height: calc(100vh - 240px);
+  max-height: calc(100vh - 340px);
   overflow-y: auto;
   background: rgb(255, 255, 255);
   border: 1px solid #e4e4e4;
@@ -101,7 +101,7 @@ td.mat-cell {
   }
 }
 
-.search-cointainer {
+.search-container {
   display: flex;
   align-items: center;
   gap: 16px;
