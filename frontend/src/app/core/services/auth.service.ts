@@ -29,7 +29,6 @@ export interface RegisterData {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly router = inject(Router);
   private readonly store = inject(Store);
   private readonly baseUrl = `${environment.baseURL}/auth`;
 
@@ -85,6 +84,5 @@ export class AuthService {
   public logout(): void {
     sessionStorage.removeItem('token');
     this.store.dispatch({ type: '[Auth] Logout' });
-    this.router.navigate(['/login']);
   }
 }

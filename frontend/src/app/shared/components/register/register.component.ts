@@ -1,4 +1,4 @@
-import { Component, inject, DestroyRef } from '@angular/core';
+import { Component, inject, DestroyRef, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,7 +15,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { AuthService } from '../../../core/services/auth.service';
+import { filter } from 'rxjs/internal/operators/filter';
+import { AuthFacade } from '../../store/auth/auth.facade';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -27,19 +29,20 @@ import { AuthService } from '../../../core/services/auth.service';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    AsyncPipe,
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private router = inject(Router);
+  private authFacade = inject(AuthFacade);
   private snackBar = inject(MatSnackBar);
   private destroyRef = inject(DestroyRef);
 
   public hidePassword = true;
-  public isRegistering = false;
+
+  public isLoading$ = this.authFacade.loading$;
 
   public registerForm: FormGroup = this.formBuilder.group(
     {
@@ -52,6 +55,20 @@ export class RegisterComponent {
     { validators: this.passwordMatchValidator },
   );
 
+  public ngOnInit(): void {
+    this.authFacade.errors$
+      ?.pipe(
+        filter((error) => error !== null),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((err) => {
+        this.snackBar.open(err, 'Close', {
+          duration: 5000,
+          panelClass: ['error-snackbar'],
+        });
+      });
+  }
+
   private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
@@ -62,30 +79,10 @@ export class RegisterComponent {
 
   public onSubmit(): void {
     if (this.registerForm.valid) {
-      this.isRegistering = true;
-
       const { firstName, lastName, email, password } = this.registerForm.value;
       const registrationData = { firstName, lastName, email, password };
 
-      this.authService
-        .register(registrationData)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: () => {
-            this.snackBar.open('Registration successful! Please login.', 'Close', {
-              duration: 5000,
-              panelClass: ['success-snackbar'],
-            });
-            this.router.navigate(['/login']);
-          },
-          error: (err) => {
-            this.isRegistering = false;
-            this.snackBar.open(err?.error?.message || 'Registration failed.', 'Close', {
-              duration: 5000,
-              panelClass: ['error-snackbar'],
-            });
-          },
-        });
+      this.authFacade.register(registrationData);
     }
   }
 }

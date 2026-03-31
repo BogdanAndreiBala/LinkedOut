@@ -5,7 +5,7 @@
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-row">
         <mat-form-field appearance="outline">
-          <mat-label>First Name*</mat-label>
+          <mat-label>First Name</mat-label>
           <input matInput formControlName="firstName" placeholder="John" />
           @if (registerForm.get('firstName')?.hasError('required')) {
             <mat-error>Mandatory!</mat-error>
@@ -13,7 +13,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Last Name*</mat-label>
+          <mat-label>Last Name</mat-label>
           <input matInput formControlName="lastName" placeholder="Doe" />
           @if (registerForm.get('lastName')?.hasError('required')) {
             <mat-error>Mandatory!</mat-error>
@@ -22,7 +22,7 @@
       </div>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Email*</mat-label>
+        <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" placeholder="example@email.com" />
         @if (registerForm.get('email')?.hasError('email')) {
           <mat-error>Invalid email format</mat-error>
@@ -30,7 +30,7 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Password*</mat-label>
+        <mat-label>Password</mat-label>
         <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
         <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
           <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
@@ -41,7 +41,7 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Confirm Password*</mat-label>
+        <mat-label>Confirm Password</mat-label>
         <input
           matInput
           [type]="hidePassword ? 'password' : 'text'"
@@ -60,7 +60,7 @@
           color="primary"
           type="submit"
           class="auth-button"
-          [disabled]="registerForm.invalid || isRegistering"
+          [disabled]="registerForm.invalid || (isLoading$ | async)"
         >
           Register
         </button>

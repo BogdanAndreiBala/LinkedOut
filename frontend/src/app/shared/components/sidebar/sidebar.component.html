@@ -15,7 +15,7 @@
       </a>
 
       <a
-        [routerLink]="['/profile', user.id]"
+        [routerLink]="['/profile', user?.id]"
         routerLinkActive="active"
         class="nav-item"
         [matTooltip]="isCollapsed ? 'My Profile' : ''"
@@ -50,10 +50,10 @@
         </button>
 
         <div class="user-details">
-          <div class="avatar">{{ user.firstName[0] }}{{ user.lastName[0] }}</div>
+          <div class="avatar">{{ user?.firstName?.[0] }}{{ user?.lastName?.[0] }}</div>
           <div class="user-text">
-            <div class="name">{{ user.firstName }} {{ user.lastName }}</div>
-            <div class="headline">{{ user.headline }}</div>
+            <div class="name">{{ user?.firstName }} {{ user?.lastName }}</div>
+            <div class="headline">{{ user?.headline }}</div>
           </div>
         </div>
       } @else {
@@ -63,7 +63,7 @@
           matTooltip="Logout"
           matTooltipPosition="right"
         >
-          {{ user.firstName[0] }}{{ user.lastName[0] }}
+          {{ user?.firstName?.[0] }}{{ user?.lastName?.[0] }}
         </div>
       }
     </div>

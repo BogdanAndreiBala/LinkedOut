@@ -15,8 +15,4 @@ export class App {
   protected readonly title = signal('forms-homework-project');
 
   public readonly authFacade = inject(AuthFacade);
-
-  ngOnInit(): void {
-    this.authFacade.init();
-  }
 }
