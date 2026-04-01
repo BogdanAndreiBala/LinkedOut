@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -29,26 +28,16 @@ export interface RegisterData {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly router = inject(Router);
-  private readonly store = inject(Store);
   private readonly baseUrl = `${environment.baseURL}/auth`;
 
   public login(credentials: LoginCredentials): Observable<{ accessToken: string }> {
     return this.http
       .post<{ accessToken: string }>(`${this.baseUrl}/login`, credentials)
-      .pipe(tap((response) => this.persistToken(response.accessToken)));
+      .pipe(tap((response) => this.setToken(response.accessToken)));
   }
 
-  public persistToken(token: string): void {
+  public setToken(token: string): void {
     sessionStorage.setItem('token', token);
-    this.loadUserFromToken();
-  }
-
-  public loadUserFromToken(): void {
-    const userId = this.getUserIdFromToken();
-    if (userId) {
-      this.store.dispatch({ type: '[Auth] Load Current User', userId });
-    }
   }
 
   public getUserIdFromToken(): number | null {
@@ -82,9 +71,7 @@ export class AuthService {
     return this.http.post<void>(`${this.baseUrl}/register`, userData);
   }
 
-  public logout(): void {
+  public clearToken(): void {
     sessionStorage.removeItem('token');
-    this.store.dispatch({ type: '[Auth] Logout' });
-    this.router.navigate(['/login']);
   }
 }

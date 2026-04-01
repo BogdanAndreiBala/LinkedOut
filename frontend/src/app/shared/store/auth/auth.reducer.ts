@@ -6,9 +6,14 @@ import {
   loadCurrentUser,
   loadCurrentUserFailure,
   loadCurrentUserSuccess,
+  loginFailure,
   loginSuccess,
   logout,
   updateCurrentUser,
+  login,
+  registerFailure,
+  registerSuccess,
+  registerAction,
 } from './auth.actions';
 
 export const authReducer = createReducer(
@@ -46,16 +51,35 @@ export const authReducer = createReducer(
     currentUser: user,
   })),
 
+  on(logout, () => ({
+    ...initialAuthState,
+    isAuthenticated: false,
+    isAuthInitialized: true,
+  })),
+
+  on(login, (state) => ({ ...state, loading: true, error: null })),
+
   on(loginSuccess, (state, { user }) => ({
     ...state,
+    loading: false,
     currentUser: user,
     isAuthenticated: true,
     isAuthInitialized: true,
   })),
 
-  on(logout, () => ({
-    ...initialAuthState,
-    isAuthenticated: false,
-    isAuthInitialized: true,
+  on(loginFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+  })),
+
+  on(registerAction, (state) => ({ ...state, loading: true, error: null })),
+
+  on(registerSuccess, (state) => ({ ...state, loading: false })),
+
+  on(registerFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
   })),
 );

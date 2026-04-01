@@ -21,7 +21,6 @@ export class App {
   public readonly userTableFacade = inject(UserTableFacade);
 
   ngOnInit(): void {
-    this.authFacade.init();
     this.authFacade.currentUser$.subscribe((user) => {
       if (user) {
         this.uiFacade.initTheme(user.isDarkTheme || false);

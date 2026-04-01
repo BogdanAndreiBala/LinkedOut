@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthFacade } from '../../store/auth/auth.facade';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -22,20 +23,21 @@ import { AuthFacade } from '../../store/auth/auth.facade';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    AsyncPipe,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
-  private authService = inject(AuthService);
   private authFacade = inject(AuthFacade);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private destroyRef = inject(DestroyRef);
 
   public hidePassword = true;
-  public isLoggingIn = false;
+
+  public isLoading$ = this.authFacade.loading$;
 
   public loginForm: FormGroup = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
@@ -51,30 +53,30 @@ export class LoginComponent implements OnInit {
       .subscribe(() => {
         this.router.navigate(['/network']);
       });
+
+    this.authFacade.errors$
+      ?.pipe(
+        filter((error) => error !== null),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((err) => {
+        this.snackBar.open(err, 'Close', {
+          duration: 5000,
+          horizontalPosition: 'left',
+          verticalPosition: 'bottom',
+          panelClass: ['error-snackbar'],
+        });
+      });
   }
 
   public onSubmit(): void {
     if (this.loginForm.valid) {
-      this.isLoggingIn = true;
       const credentials = {
         email: this.loginForm.value.email!,
         password: this.loginForm.value.password!,
       };
 
-      this.authService
-        .login(credentials)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          error: (err) => {
-            this.isLoggingIn = false;
-            this.snackBar.open('Login failed. Please check your credentials.', 'Close', {
-              duration: 5000,
-              horizontalPosition: 'left',
-              verticalPosition: 'bottom',
-              panelClass: ['error-snackbar'],
-            });
-          },
-        });
+      this.authFacade.login(credentials);
     }
   }
 }

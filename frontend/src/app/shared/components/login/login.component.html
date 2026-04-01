@@ -4,7 +4,7 @@
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Enter your email*</mat-label>
+        <mat-label>Enter your email</mat-label>
         <input matInput type="email" formControlName="email" placeholder="example@email.com" />
         @if (loginForm.get('email')?.hasError('required')) {
           <mat-error>This field is mandatory!</mat-error>
@@ -15,7 +15,7 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Enter your password*</mat-label>
+        <mat-label>Enter your password</mat-label>
         <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
         <button
           mat-icon-button
@@ -37,7 +37,7 @@
           color="primary"
           type="submit"
           class="auth-button"
-          [disabled]="loginForm.invalid || isLoggingIn"
+          [disabled]="loginForm.invalid || (isLoading$ | async)"
         >
           Login
         </button>
