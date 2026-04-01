@@ -27,6 +27,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
+<<<<<<< HEAD
     provideHttpClient(withInterceptors([authInterceptor])),
     provideCustomIcons(),
     provideStore({
@@ -42,5 +43,9 @@ export const appConfig: ApplicationConfig = {
         take(1),
       );
     }),
+=======
+    provideHttpClient(),
+    provideCustomIcons(),
+>>>>>>> master
   ],
 };
