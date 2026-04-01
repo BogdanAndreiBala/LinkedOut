@@ -76,10 +76,21 @@ export class AuthEffects {
       ofType(login),
       switchMap(({ credentials }) =>
         this.authService.login(credentials).pipe(
-          // login in auth service already dispathes loadCurrentUser, so we just return a dummy success action here
-          map(() => ({ type: '[Auth] Login API Success' })),
+          map(() => {
+            const userId = this.authService.getUserIdFromToken();
+
+            if (userId) {
+              return loadCurrentUser({ userId });
+            } else {
+              return loginFailure({ error: 'An unexpected error occurred.' });
+            }
+          }),
           catchError((error) =>
-            of(loginFailure({ error: 'Login failed. Please check your credentials.' })),
+            of(
+              loginFailure({
+                error: error?.error?.message || 'Login failed. Please check your credentials.',
+              }),
+            ),
           ),
         ),
       ),

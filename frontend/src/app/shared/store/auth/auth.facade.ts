@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { initAuth, logout } from './auth.actions';
+import { initAuth, logout, login } from './auth.actions';
 import { LoginCredentials } from '../../../core/services/auth.service';
 import { registerAction } from './auth.actions';
 import { RegisterData } from '../../../core/services/auth.service';
@@ -31,7 +31,7 @@ export class AuthFacade {
   }
 
   public login(credentials: LoginCredentials): void {
-    this.store.dispatch({ type: '[Auth] Login', credentials });
+    this.store.dispatch(login({ credentials }));
   }
 
   public register(data: RegisterData): void {
