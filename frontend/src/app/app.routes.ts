@@ -1,9 +1,26 @@
 import { Routes } from '@angular/router';
+import { unauthGuard } from './core/guards/unauth-guard';
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'network', pathMatch: 'full' },
+
+  {
+    path: 'login',
+    canActivate: [unauthGuard],
+    loadComponent: () =>
+      import('./shared/components/login/login.component').then((m) => m.LoginComponent),
+  },
+  {
+    path: 'register',
+    canActivate: [unauthGuard],
+    loadComponent: () =>
+      import('./shared/components/register/register.component').then((m) => m.RegisterComponent),
+  },
+
   {
     path: 'network',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./shared/components/network-table/network-table.component').then(
         (m) => m.NetworkTableComponent,
@@ -12,6 +29,7 @@ export const routes: Routes = [
 
   {
     path: 'profile/:id',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./shared/components/user-profile/user-profile.component').then(
         (m) => m.UserProfileComponent,
@@ -19,6 +37,7 @@ export const routes: Routes = [
   },
   {
     path: 'settings',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./shared/components/settings/settings.component').then((m) => m.SettingsComponent),
   },

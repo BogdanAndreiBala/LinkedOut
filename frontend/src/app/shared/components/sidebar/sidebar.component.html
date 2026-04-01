@@ -1,0 +1,77 @@
+@if (authFacade.currentUser$ | async; as user) {
+  <div class="sidebar-container" [class.collapsed]="isCollapsed">
+    <nav class="nav-section">
+      <a
+        routerLink="/network"
+        routerLinkActive="active"
+        class="nav-item"
+        [matTooltip]="isCollapsed ? 'Network' : ''"
+        matTooltipPosition="right"
+      >
+        <mat-icon>home</mat-icon>
+        @if (!isCollapsed) {
+          <span class="nav-label">Network</span>
+        }
+      </a>
+
+      <a
+        [routerLink]="['/profile', user?.id]"
+        routerLinkActive="active"
+        class="nav-item"
+        [matTooltip]="isCollapsed ? 'My Profile' : ''"
+        matTooltipPosition="right"
+      >
+        <mat-icon>person</mat-icon>
+        @if (!isCollapsed) {
+          <span class="nav-label">My Profile</span>
+        }
+      </a>
+
+      <a
+        routerLink="/settings"
+        routerLinkActive="active"
+        class="nav-item"
+        [matTooltip]="isCollapsed ? 'Settings' : ''"
+        matTooltipPosition="right"
+      >
+        <mat-icon>settings</mat-icon>
+        @if (!isCollapsed) {
+          <span class="nav-label">Settings</span>
+        }
+      </a>
+    </nav>
+
+    <div class="spacer"></div>
+
+    <div class="user-section">
+      @if (!isCollapsed) {
+        <button mat-stroked-button color="warn" class="logout-btn" (click)="logout()">
+          <mat-icon>logout</mat-icon> Logout
+        </button>
+
+        <div class="user-details">
+          <div class="avatar">{{ user?.firstName?.[0] }}{{ user?.lastName?.[0] }}</div>
+          <div class="user-text">
+            <div class="name">{{ user?.firstName }} {{ user?.lastName }}</div>
+            <div class="headline">{{ user?.headline }}</div>
+          </div>
+        </div>
+      } @else {
+        <div
+          class="avatar collapsed-avatar"
+          (click)="logout()"
+          matTooltip="Logout"
+          matTooltipPosition="right"
+        >
+          {{ user?.firstName?.[0] }}{{ user?.lastName?.[0] }}
+        </div>
+      }
+    </div>
+
+    <div class="toggle-section">
+      <button mat-icon-button class="toggle-btn" (click)="toggleSidebar()">
+        <mat-icon>{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+      </button>
+    </div>
+  </div>
+}

@@ -2,7 +2,8 @@ import { Component, inject, OnInit, DestroyRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { EndDatePipe } from '../../pipes/end-date.pipe';
 import { MatCardModule } from '@angular/material/card';
-import { UsersService } from '../../services/users.service';
+import { UsersService } from '../../services/user.service';
+
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../../models/user.model';
 import { MatIconModule } from '@angular/material/icon';

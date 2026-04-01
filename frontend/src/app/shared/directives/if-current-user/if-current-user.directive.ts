@@ -1,9 +1,10 @@
 import { DestroyRef, Directive, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Input } from '@angular/core';
 import { User } from '../../models/user.model';
-import { UsersService } from '../../services/users.service';
+import { UsersService } from '../../services/user.service';
 import { inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AuthFacade } from '../../store/auth/auth.facade';
 
 @Directive({
   selector: '[appIfCurrentUser]',
@@ -17,6 +18,8 @@ export class IfCurrentUserDirective implements OnInit {
   private templateRef = inject(TemplateRef);
   private viewContainerRef = inject(ViewContainerRef);
 
+  private authFacade = inject(AuthFacade);
+
   private loggedUserId!: number;
   private revieweduserId!: number;
 
@@ -26,15 +29,15 @@ export class IfCurrentUserDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService
-      .currentUser()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (user) => {
+    this.authFacade.currentUser$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (user: User | null) => {
+        if (user) {
           this.loggedUserId = user.id;
           this.decideRender();
-        },
-      });
+        }
+        this.decideRender();
+      },
+    });
   }
 
   public decideRender() {

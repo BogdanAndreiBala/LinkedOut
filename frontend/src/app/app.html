@@ -1,2 +1,12 @@
-<app-header></app-header>
-<router-outlet />
+@if (authFacade.isAuthenticated$ | async) {
+  <div class="app-layout">
+    <app-header></app-header>
+    <app-sidebar></app-sidebar>
+
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+} @else {
+  <router-outlet></router-outlet>
+}
