@@ -1,10 +1,15 @@
-import { defineConfig } from 'vitest/config';
+/// <reference types="vitest" />
+import { defineConfig } from 'vite';
+import angular from '@analogjs/vite-plugin-angular';
 
 export default defineConfig({
+  plugins: [angular({ tsconfig: './tsconfig.spec.json' })],
   test: {
     globals: true,
-    setupFiles: ['./vitest.setup.ts'],
-    exclude: ['playwright/**', '**/node_modules/**'],
+    environment: 'jsdom',
+    setupFiles: ['src/test-setup.ts'],
+    pool: 'forks',
+    include: ['src/**/*.spec.ts'],
     coverage: {
       reporter: ['text', 'html', 'lcov', 'json-summary', 'json'],
       reportsDirectory: './coverage',
