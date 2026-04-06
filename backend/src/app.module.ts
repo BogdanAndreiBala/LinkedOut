@@ -4,6 +4,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
+import { CompaniesModule } from './companies/companies.module';
+import { SkillsModule } from './skills/skills.module';
+import { JobsModule } from './jobs/jobs.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,7 +17,11 @@ import { UsersModule } from './users/users.module';
       synchronize: true,
       autoLoadEntities: true,
     }),
-    UsersModule,
+  UsersModule,
+  SkillsModule,
+  CompaniesModule,
+  JobsModule,
+  AuthModule,
     DatabaseModule,
   ],
   controllers: [AppController],
