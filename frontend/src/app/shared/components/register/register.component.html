@@ -5,11 +5,7 @@
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-row">
         <mat-form-field appearance="outline">
-          <<<<<<< HEAD
-          <mat-label>First Name*</mat-label>
-          =======
           <mat-label>First Name</mat-label>
-          >>>>>>> master
           <input matInput formControlName="firstName" placeholder="John" />
           @if (registerForm.get('firstName')?.hasError('required')) {
             <mat-error>Mandatory!</mat-error>
@@ -17,11 +13,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <<<<<<< HEAD
-          <mat-label>Last Name*</mat-label>
-          =======
           <mat-label>Last Name</mat-label>
-          >>>>>>> master
           <input matInput formControlName="lastName" placeholder="Doe" />
           @if (registerForm.get('lastName')?.hasError('required')) {
             <mat-error>Mandatory!</mat-error>
@@ -30,11 +22,7 @@
       </div>
 
       <mat-form-field appearance="outline" class="full-width">
-        <<<<<<< HEAD
-        <mat-label>Email*</mat-label>
-        =======
         <mat-label>Email</mat-label>
-        >>>>>>> master
         <input matInput type="email" formControlName="email" placeholder="example@email.com" />
         @if (registerForm.get('email')?.hasError('email')) {
           <mat-error>Invalid email format</mat-error>
@@ -42,11 +30,7 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <<<<<<< HEAD
-        <mat-label>Password*</mat-label>
-        =======
         <mat-label>Password</mat-label>
-        >>>>>>> master
         <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
         <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
           <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
