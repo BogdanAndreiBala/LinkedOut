@@ -38,13 +38,14 @@ describe('AvatarComponent', () => {
     component.lastName = 'Doe';
     fixture.detectChanges();
     const divElement: HTMLElement = fixture.nativeElement.querySelector('.avatar');
-    expect(divElement.textContent).toBe('JD');
+    expect(divElement.textContent?.trim()).toBe('JD');
   });
 
+  // I don t know how to do this, everithing fails
   it('should have the background color set to #0a66c2', () => {
-    const divElement: HTMLElement = fixture.nativeElement.querySelector('.avatar');
+    const divElement: HTMLElement = fixture.nativeElement.querySelector('div');
     const styles = getComputedStyle(divElement);
-    expect(styles.backgroundColor).toBe('#0a66c2');
+    expect(styles.backgroundColor).toBe('rgb(10, 102, 194)');
   });
 
   it('should return correct dimensions for small size', () => {
