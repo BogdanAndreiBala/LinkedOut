@@ -64,7 +64,6 @@ describe('JobsComponent', () => {
 
     expect(component.currentPage).toBe(2);
     expect(component.currentLimit).toBe(25);
-
     expect(mockJobsService.getAll).toHaveBeenCalledWith({ search: undefined, page: 2, limit: 25 });
   });
 
