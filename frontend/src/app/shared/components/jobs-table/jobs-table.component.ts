@@ -1,11 +1,11 @@
 import { Component, OnInit, inject, DestroyRef } from '@angular/core';
-import { CommonModule } from '@angular/common'; // 🌟 Needed for the DatePipe!
+import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { PageEvent } from '@angular/material/paginator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { JobsService } from '../../services/job.service';
-import { Job } from '../../models/job.model'; // Adjust path!
+import { Job } from '../../models/job.model';
 import { GenericTableComponent } from '../generic-table/generic-table.component';
 
 @Component({

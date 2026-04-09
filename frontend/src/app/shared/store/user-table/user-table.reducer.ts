@@ -8,6 +8,8 @@ import {
   setSearch,
   setSort,
   initTablePreferences,
+  updatePreferencesFailure,
+  loadUsersCachedSuccess,
 } from './user-table.actions';
 
 export const userTableReducer = createReducer(
@@ -24,6 +26,14 @@ export const userTableReducer = createReducer(
     users,
     totalMatchCount,
     loading: false,
+  })),
+
+  on(loadUsersCachedSuccess, (state, { users, totalMatchCount, warning }) => ({
+    ...state,
+    users,
+    totalMatchCount,
+    loading: false,
+    error: warning,
   })),
 
   on(loadUsersFailure, (state, { error }) => ({
@@ -61,5 +71,10 @@ export const userTableReducer = createReducer(
   on(initTablePreferences, (state, { preferences }) => ({
     ...state,
     preferences: { ...preferences },
+  })),
+
+  on(updatePreferencesFailure, (state, { error }) => ({
+    ...state,
+    error,
   })),
 );

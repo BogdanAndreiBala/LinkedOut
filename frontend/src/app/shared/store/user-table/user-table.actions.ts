@@ -33,3 +33,19 @@ export const initTablePreferences = createAction(
   '[User Table] Init Preferences',
   props<{ preferences: TablePreferences }>(),
 );
+
+export const updatePreferencesSuccess = createAction('[User Table] Update Preferences Success');
+
+export const updatePreferencesFailure = createAction(
+  '[User Table] Update Preferences Failure',
+  props<{ error: string }>(),
+);
+
+export const loadUsersCachedSuccess = createAction(
+  '[User Table] Load Users Cached Success',
+  props<{ users: User[]; totalMatchCount: number; warning: string }>(),
+);
+
+export const loadPreferencesFromStorage = createAction(
+  '[User Table] Load Preferences From Storage',
+);

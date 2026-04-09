@@ -5,9 +5,11 @@
       <input matInput [formControl]="searchControl" placeholder="Search..." />
     </mat-form-field>
 
-    <div class="spinner-wrapper" *ngIf="isLoading">
-      <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
-    </div>
+    @if (isLoading) {
+      <div class="spinner-wrapper">
+        <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+      </div>
+    }
   </div>
 
   <div class="table-container mat-elevation-z1">

@@ -13,6 +13,11 @@ import {
   setPagination,
   setSearch,
   setSort,
+  updatePreferencesSuccess,
+  updatePreferencesFailure,
+  loadUsersCachedSuccess,
+  loadPreferencesFromStorage,
+  initTablePreferences,
 } from './user-table.actions';
 
 @Injectable()
@@ -45,18 +50,16 @@ export class UserTableEffects {
                 totalMatchCount: response.pagination.totalItems || 0,
               }),
             ),
-            catchError((error) => {
+            catchError(() => {
               const cachedData = localStorage.getItem('cached-networkTable');
 
               if (cachedData) {
                 const parsed = JSON.parse(cachedData);
                 return of(
-                  loadUsersSuccess({
+                  loadUsersCachedSuccess({
                     users: parsed.data,
                     totalMatchCount: parsed.pagination.totalItems || 0,
-                  }),
-                  loadUsersFailure({
-                    error: 'You are offline! This list might not contain the most recent data!!!',
+                    warning: 'You are offline! This list might not contain the most recent data!!!',
                   }),
                 );
               }
@@ -79,11 +82,43 @@ export class UserTableEffects {
       switchMap(([, preferences, currentUser]) => {
         if (currentUser) {
           localStorage.setItem('userTablePreferences', JSON.stringify(preferences));
-          this.usersService
+          return this.usersService
             .updateUser(currentUser.id, { tablePreferences: preferences })
-            .subscribe();
+            .pipe(
+              map(() => updatePreferencesSuccess()),
+              catchError(() =>
+                of(
+                  updatePreferencesFailure({
+                    error: 'Failed to save preferences. Please try again.',
+                  }),
+                ),
+              ),
+            );
         }
-        return of(loadUsers());
+        return of(
+          updatePreferencesFailure({
+            error: 'Failed to save preferences. Create a user account first.',
+          }),
+        );
+      }),
+    ),
+  );
+
+  loadUsersOnPreferencesChanged$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updatePreferencesSuccess, updatePreferencesFailure),
+      switchMap(() => of(loadUsers())),
+    ),
+  );
+
+  loadPreferencesFromStorage$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadPreferencesFromStorage),
+      map(() => localStorage.getItem('userTablePreferences')),
+      filter((savedPrefs): savedPrefs is string => savedPrefs !== null),
+      map((savedPrefs) => {
+        const preferences = JSON.parse(savedPrefs);
+        return initTablePreferences({ preferences });
       }),
     ),
   );
