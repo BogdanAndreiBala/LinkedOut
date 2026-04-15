@@ -1,0 +1,58 @@
+.page-layout {
+  padding: 24px;
+}
+
+.page-title {
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.search-container {
+  margin-bottom: 16px;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 400px;
+}
+
+.spinner-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+.company-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.company-icon {
+  color: #757575;
+}
+
+.website-link {
+  color: #1976d2;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.jobs-badge {
+  background-color: #e0e0e0;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-weight: 500;
+  font-size: 12px;
+}
