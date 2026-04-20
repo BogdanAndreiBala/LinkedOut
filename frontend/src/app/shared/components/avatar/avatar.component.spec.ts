@@ -41,7 +41,6 @@ describe('AvatarComponent', () => {
     expect(divElement.textContent?.trim()).toBe('JD');
   });
 
-  // I don t know how to do this, everithing fails
   it('should have the background color set to #0a66c2', () => {
     expect(component.backgroundColor).toBe('#0a66c2');
   });

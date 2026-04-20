@@ -8,54 +8,46 @@ export const routes: Routes = [
   {
     path: 'login',
     canActivate: [unauthGuard],
-    loadComponent: () =>
-      import('./shared/components/login/login.component').then((m) => m.LoginComponent),
+    loadComponent: () => import('./shared/components/login/login.component').then((m) => m.LoginComponent),
   },
   {
     path: 'register',
     canActivate: [unauthGuard],
-    loadComponent: () =>
-      import('./shared/components/register/register.component').then((m) => m.RegisterComponent),
+    loadComponent: () => import('./shared/components/register/register.component').then((m) => m.RegisterComponent),
   },
 
   {
     path: 'network',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./shared/components/network-table/network-table.component').then(
-        (m) => m.NetworkTableComponent,
-      ),
+      import('./shared/components/network-table/network-table.component').then((m) => m.NetworkTableComponent),
   },
 
   {
     path: 'profile/:id',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./shared/components/user-profile/user-profile.component').then(
-        (m) => m.UserProfileComponent,
-      ),
+      import('./shared/components/user-profile/user-profile.component').then((m) => m.UserProfileComponent),
   },
   {
     path: 'settings',
     canActivate: [authGuard],
-    loadComponent: () =>
-      import('./shared/components/settings/settings.component').then((m) => m.SettingsComponent),
+    loadComponent: () => import('./shared/components/settings/settings.component').then((m) => m.SettingsComponent),
   },
 
   {
     path: 'companies',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./shared/components/companies-table/companies-table.component').then(
-        (m) => m.CompaniesComponent,
+      import('./shared/components/companies-signals-table/companies-signals-table.component').then(
+        (m) => m.CompaniesSignalsTableComponent
       ),
   },
 
   {
     path: 'jobs',
     canActivate: [authGuard],
-    loadComponent: () =>
-      import('./shared/components/jobs-table/jobs-table.component').then((m) => m.JobsComponent),
+    loadComponent: () => import('./shared/components/jobs-table/jobs-table.component').then((m) => m.JobsComponent),
   },
 
   { path: '**', redirectTo: 'network' },
