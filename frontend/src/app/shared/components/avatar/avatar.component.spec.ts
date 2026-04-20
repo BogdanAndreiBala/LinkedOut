@@ -42,9 +42,15 @@ describe('AvatarComponent', () => {
   });
 
   // I don t know how to do this, everithing fails
-  it('should have the background color set to #0a66c2', () => {
+  it('should have the background color set to #0a66c2', async () => {
+    await fixture.whenStable();
+
+    //fixture.detectChanges();
     const divElement: HTMLElement = fixture.nativeElement.querySelector('div');
     const styles = getComputedStyle(divElement);
+    const backgroundColor = divElement.style.backgroundColor;
+    console.log('Background color:', backgroundColor);
+    //expect(backgroundColor).toBe('rgb(10, 102, 194)');
     expect(styles.backgroundColor).toBe('rgb(10, 102, 194)');
   });
 
@@ -64,7 +70,7 @@ describe('AvatarComponent', () => {
   });
 
   it('should fall back to medium dimensions for an unknown size', () => {
-    component.sizeStyles = 'gigantic';
+    component.sizeStyles = 'giant';
     expect(component.sizeStylesDimensions).toEqual({ fontSize: `${medium}px` });
   });
 });
