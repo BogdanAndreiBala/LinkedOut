@@ -35,9 +35,10 @@ export class JobsComponent implements OnInit {
 
   private loadJobs() {
     this.isLoading = true;
+    const searchValue = this.currentSearch ? this.currentSearch : undefined;
     this.jobsService
       .getAll({
-        search: this.currentSearch,
+        search: searchValue,
         page: this.currentPage,
         limit: this.currentLimit,
       })

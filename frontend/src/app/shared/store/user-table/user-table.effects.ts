@@ -48,7 +48,7 @@ export class UserTableEffects {
               loadUsersSuccess({
                 users: response.data,
                 totalMatchCount: response.pagination.totalItems || 0,
-              }),
+              })
             ),
             catchError(() => {
               const cachedData = localStorage.getItem('cached-networkTable');
@@ -60,19 +60,19 @@ export class UserTableEffects {
                     users: parsed.data,
                     totalMatchCount: parsed.pagination.totalItems || 0,
                     warning: 'You are offline! This list might not contain the most recent data!!!',
-                  }),
+                  })
                 );
               }
 
               return of(
                 loadUsersFailure({
                   error: 'Cannot load network list. The server might be offline.',
-                }),
+                })
               );
-            }),
-          ),
-      ),
-    ),
+            })
+          )
+      )
+    )
   );
 
   preferencesChanged$ = createEffect(() =>
@@ -82,33 +82,31 @@ export class UserTableEffects {
       switchMap(([, preferences, currentUser]) => {
         if (currentUser) {
           localStorage.setItem('userTablePreferences', JSON.stringify(preferences));
-          return this.usersService
-            .updateUser(currentUser.id, { tablePreferences: preferences })
-            .pipe(
-              map(() => updatePreferencesSuccess()),
-              catchError(() =>
-                of(
-                  updatePreferencesFailure({
-                    error: 'Failed to save preferences. Please try again.',
-                  }),
-                ),
-              ),
-            );
+          return this.usersService.updateUser(currentUser.id, { tablePreferences: preferences }).pipe(
+            map(() => updatePreferencesSuccess()),
+            catchError(() =>
+              of(
+                updatePreferencesFailure({
+                  error: 'Failed to save preferences. Please try again.',
+                })
+              )
+            )
+          );
         }
         return of(
           updatePreferencesFailure({
             error: 'Failed to save preferences. Create a user account first.',
-          }),
+          })
         );
-      }),
-    ),
+      })
+    )
   );
 
   loadUsersOnPreferencesChanged$ = createEffect(() =>
     this.actions$.pipe(
       ofType(updatePreferencesSuccess, updatePreferencesFailure),
-      switchMap(() => of(loadUsers())),
-    ),
+      switchMap(() => of(loadUsers()))
+    )
   );
 
   loadPreferencesFromStorage$ = createEffect(() =>
@@ -119,7 +117,7 @@ export class UserTableEffects {
       map((savedPrefs) => {
         const preferences = JSON.parse(savedPrefs);
         return initTablePreferences({ preferences });
-      }),
-    ),
+      })
+    )
   );
 }

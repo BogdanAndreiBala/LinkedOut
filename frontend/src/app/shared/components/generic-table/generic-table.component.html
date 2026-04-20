@@ -1,13 +1,23 @@
 <div class="generic-table-layout">
   <div class="search-container">
-    <mat-form-field appearance="outline" class="search-bar">
+    <mat-form-field
+      appearance="outline"
+      class="search-bar"
+    >
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput [formControl]="searchControl" placeholder="Search..." />
+      <input
+        matInput
+        [formControl]="searchControl"
+        placeholder="Search..."
+      />
     </mat-form-field>
 
     @if (isLoading) {
       <div class="spinner-wrapper">
-        <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+        <mat-progress-spinner
+          mode="indeterminate"
+          diameter="25"
+        ></mat-progress-spinner>
       </div>
     }
   </div>

@@ -23,14 +23,12 @@ export class UiEffects {
         if (!currentUser) {
           return of(toggleThemeFailure({ error: 'No user' }));
         }
-        return this.usersService
-          .updateUser(currentUser.id, { ...currentUser, isDarkTheme: newTheme })
-          .pipe(
-            map(() => toggleThemeSuccess({ isDarkTheme: newTheme })),
-            catchError((error) => of(toggleThemeFailure({ error: error.message }))),
-          );
-      }),
-    ),
+        return this.usersService.updateUser(currentUser.id, { ...currentUser, isDarkTheme: newTheme }).pipe(
+          map(() => toggleThemeSuccess({ isDarkTheme: newTheme })),
+          catchError((error) => of(toggleThemeFailure({ error: error.message })))
+        );
+      })
+    )
   );
 
   applyTheme$ = createEffect(
@@ -39,8 +37,8 @@ export class UiEffects {
         ofType(initTheme, toggleThemeSuccess),
         tap(({ isDarkTheme }) => {
           document.documentElement.classList.toggle('dark-theme', isDarkTheme);
-        }),
+        })
       ),
-    { dispatch: false },
+    { dispatch: false }
   );
 }

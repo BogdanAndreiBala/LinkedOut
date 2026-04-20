@@ -76,5 +76,5 @@ export const userTableReducer = createReducer(
   on(updatePreferencesFailure, (state, { error }) => ({
     ...state,
     error,
-  })),
+  }))
 );
