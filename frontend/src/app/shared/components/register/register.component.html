@@ -2,53 +2,69 @@
   <div class="auth-card">
     <h1 class="auth-title">Register</h1>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+    <form
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()"
+      class="auth-form"
+    >
       <div class="form-row">
         <mat-form-field appearance="outline">
-          <<<<<<< HEAD
-          <mat-label>First Name*</mat-label>
-          =======
           <mat-label>First Name</mat-label>
-          >>>>>>> master
-          <input matInput formControlName="firstName" placeholder="John" />
+          <input
+            matInput
+            formControlName="firstName"
+            placeholder="John"
+          />
           @if (registerForm.get('firstName')?.hasError('required')) {
             <mat-error>Mandatory!</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <<<<<<< HEAD
-          <mat-label>Last Name*</mat-label>
-          =======
           <mat-label>Last Name</mat-label>
-          >>>>>>> master
-          <input matInput formControlName="lastName" placeholder="Doe" />
+          <input
+            matInput
+            formControlName="lastName"
+            placeholder="Doe"
+          />
           @if (registerForm.get('lastName')?.hasError('required')) {
             <mat-error>Mandatory!</mat-error>
           }
         </mat-form-field>
       </div>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <<<<<<< HEAD
-        <mat-label>Email*</mat-label>
-        =======
+      <mat-form-field
+        appearance="outline"
+        class="full-width"
+      >
         <mat-label>Email</mat-label>
-        >>>>>>> master
-        <input matInput type="email" formControlName="email" placeholder="example@email.com" />
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+          placeholder="example@email.com"
+        />
         @if (registerForm.get('email')?.hasError('email')) {
           <mat-error>Invalid email format</mat-error>
         }
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <<<<<<< HEAD
-        <mat-label>Password*</mat-label>
-        =======
+      <mat-form-field
+        appearance="outline"
+        class="full-width"
+      >
         <mat-label>Password</mat-label>
-        >>>>>>> master
-        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+        <input
+          matInput
+          [type]="hidePassword ? 'password' : 'text'"
+          formControlName="password"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="hidePassword = !hidePassword"
+          type="button"
+        >
           <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
         @if (registerForm.get('password')?.hasError('minlength')) {
@@ -56,16 +72,17 @@
         }
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field
+        appearance="outline"
+        class="full-width"
+      >
         <mat-label>Confirm Password</mat-label>
         <input
           matInput
           [type]="hidePassword ? 'password' : 'text'"
           formControlName="confirmPassword"
         />
-        @if (
-          registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched
-        ) {
+        @if (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
           <mat-error>Passwords do not match!</mat-error>
         }
       </mat-form-field>
@@ -81,7 +98,12 @@
           Register
         </button>
 
-        <button mat-stroked-button type="button" class="auth-button" routerLink="/login">
+        <button
+          mat-stroked-button
+          type="button"
+          class="auth-button"
+          routerLink="/login"
+        >
           Back to Login
         </button>
       </div>

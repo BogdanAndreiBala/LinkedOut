@@ -9,7 +9,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { AuthService } from '../../../core/services/auth.service';
 import { AuthFacade } from '../../store/auth/auth.facade';
 import { AsyncPipe } from '@angular/common';
 

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, Input, OnInit, inject } from '@angular/core';
+import { Directive, Input, OnInit, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 
 @Directive({

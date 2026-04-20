@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as UiActions from './ui.actions';
 import { selectIsDarkTheme } from './ui.selectors';
 import { initTheme, toggleTheme } from './ui.actions';
 

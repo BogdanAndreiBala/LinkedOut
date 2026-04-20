@@ -9,6 +9,7 @@ import {
 } from './user-table.selectors';
 import {
   initTablePreferences,
+  loadPreferencesFromStorage,
   loadUsers,
   setPagination,
   setSearch,
@@ -46,5 +47,9 @@ export class UserTableFacade {
     if (preferences) {
       this.store.dispatch(initTablePreferences({ preferences }));
     }
+  }
+
+  public loadPreferencesFromStorage(): void {
+    this.store.dispatch(loadPreferencesFromStorage());
   }
 }
