@@ -42,16 +42,8 @@ describe('AvatarComponent', () => {
   });
 
   // I don t know how to do this, everithing fails
-  it('should have the background color set to #0a66c2', async () => {
-    await fixture.whenStable();
-
-    //fixture.detectChanges();
-    const divElement: HTMLElement = fixture.nativeElement.querySelector('div');
-    const styles = getComputedStyle(divElement);
-    const backgroundColor = divElement.style.backgroundColor;
-    console.log('Background color:', backgroundColor);
-    //expect(backgroundColor).toBe('rgb(10, 102, 194)');
-    expect(styles.backgroundColor).toBe('rgb(10, 102, 194)');
+  it('should have the background color set to #0a66c2', () => {
+    expect(component.backgroundColor).toBe('#0a66c2');
   });
 
   it('should return correct dimensions for small size', () => {

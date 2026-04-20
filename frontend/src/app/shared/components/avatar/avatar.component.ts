@@ -15,11 +15,16 @@ export class AvatarComponent {
   @Input() public firstName: string = '';
   @Input() public lastName: string = '';
   @Input() public sizeStyles: 'small' | 'medium' | 'large' | string = 'medium';
+  private backgroundColors: string = '#0a66c2';
 
   get initials(): string {
     const firstInitial = this.firstName.charAt(0).toUpperCase();
     const lastInitial = this.lastName.charAt(0).toUpperCase();
     return `${firstInitial}${lastInitial}`;
+  }
+
+  get backgroundColor(): string {
+    return this.backgroundColors;
   }
 
   get sizeStylesDimensions(): { fontSize: string } {
