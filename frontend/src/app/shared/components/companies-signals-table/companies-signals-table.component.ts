@@ -1,7 +1,7 @@
 import { Component, computed, signal, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, switchMap, map, startWith, catchError, of } from 'rxjs';
+import { debounceTime, switchMap, map, startWith, catchError, of, tap } from 'rxjs';
 import { CompaniesService } from '../../services/company.service';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -33,9 +33,15 @@ export class CompaniesSignalsTableComponent {
   public currentLimit = signal(10);
   public searchControl = new FormControl('');
 
-  private searchValue = toSignal(this.searchControl.valueChanges.pipe(debounceTime(300)), {
-    initialValue: '',
-  });
+  private searchValue = toSignal(
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      tap(() => this.currentPage.set(1)),
+    ),
+    {
+      initialValue: '',
+    },
+  );
 
   private tableState = computed(() => ({
     search: this.searchValue() || '',
