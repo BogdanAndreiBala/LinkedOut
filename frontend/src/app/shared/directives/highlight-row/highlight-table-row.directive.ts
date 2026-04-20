@@ -1,4 +1,4 @@
-import { Directive, ElementRef, inject, Input, input } from '@angular/core';
+import { Directive, ElementRef, inject, Input } from '@angular/core';
 
 @Directive({
   selector: '[appHighlightTableRow]',

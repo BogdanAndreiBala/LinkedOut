@@ -21,18 +21,33 @@ import { authInterceptor } from './core/interceptors/auth-interceptor';
 import { take } from 'rxjs/internal/operators/take';
 import { AuthFacade } from './shared/store/auth/auth.facade';
 import { filter } from 'rxjs/internal/operators/filter';
+import { userTableReducer } from './shared/store/user-table/user-table.reducer';
+import { USER_TABLE_FEATURE_KEY } from './shared/store/user-table/user-table.selectors';
+import { UserTableEffects } from './shared/store/user-table/user-table.effects';
+import { uiReducer } from './shared/store/ui/ui.reducer';
+import { UI_FEATURE_KEY } from './shared/store/ui/ui.selectors';
+import { UiEffects } from './shared/store/ui/ui.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+
     provideZoneChangeDetection({ eventCoalescing: true }),
+
     provideRouter(routes),
+
     provideHttpClient(withInterceptors([authInterceptor])),
+
     provideCustomIcons(),
+
     provideStore({
       [AUTH_FEATURE_KEY]: authReducer,
+      [USER_TABLE_FEATURE_KEY]: userTableReducer,
+      [UI_FEATURE_KEY]: uiReducer,
     }),
-    provideEffects(AuthEffects),
+
+    provideEffects(AuthEffects, UserTableEffects, UiEffects),
+
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideAppInitializer(() => {
       const authFacade = inject(AuthFacade);

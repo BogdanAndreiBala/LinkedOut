@@ -1,0 +1,12 @@
+button {
+  transition: transform 0.3s ease;
+  &:active {
+    transform: rotate(45deg);
+  }
+}
+
+:host-context(.dark-theme) {
+  button {
+    color: white;
+  }
+}

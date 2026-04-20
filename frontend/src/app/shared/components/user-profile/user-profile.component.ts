@@ -3,7 +3,6 @@ import { DatePipe } from '@angular/common';
 import { EndDatePipe } from '../../pipes/end-date.pipe';
 import { MatCardModule } from '@angular/material/card';
 import { UsersService } from '../../services/user.service';
-
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../../models/user.model';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,13 +12,8 @@ import { ProfileInnerListItemComponent } from '../profile-inner-list-item/profil
 import { ProfileHeaderCardComponent } from '../profile-header-card/profile-header-card.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RandomColorDirective } from '../../directives/random-color/random-color.directive';
-
-export interface ProfileSectionListItem {
-  title: string;
-  subtitle: string;
-  dateRange: string;
-  description?: string;
-}
+import { Experience } from '../../models/experience.model';
+import { Education } from '../../models/education.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -48,8 +42,8 @@ export class UserProfileComponent implements OnInit {
 
   public user?: User;
 
-  public mappedEducation: ProfileSectionListItem[] = [];
-  public mappedExperience: ProfileSectionListItem[] = [];
+  public mappedEducation: Education[] = [];
+  public mappedExperience: Experience[] = [];
 
   public ngOnInit(): void {
     const userId = Number(this.currentRoute.snapshot.paramMap.get('id'));
@@ -61,18 +55,36 @@ export class UserProfileComponent implements OnInit {
           this.user = user;
 
           this.mappedEducation = user.education.map((edu) => ({
-            title: edu.institution,
-            subtitle: `${edu.degree} • ${edu.fieldOfStudy}`,
-            dateRange: `${edu.startYear}—${this.endDatePipe.transform(edu.endYear)}`,
+            ...edu,
+            institution: edu.institution,
+            degree: edu.degree,
+            fieldOfStudy: edu.fieldOfStudy,
+            startYear: edu.startYear,
+            endYear: edu.endYear,
           }));
 
           this.mappedExperience = user.experience.map((exp) => ({
+            ...exp,
             title: exp.title,
-            subtitle: `${exp.company} • ${exp.location}`,
-            dateRange: `${exp.startDate}—${this.endDatePipe.transform(exp.endDate)}`,
+            location: exp.location,
+            startDate: exp.startDate,
+            endDate: exp.endDate,
             description: exp.description,
+            company: exp.company,
           }));
         },
       });
+  }
+
+  public getEducationDateRange(education: Education): string {
+    const startYear = education.startYear;
+    const endYear = this.endDatePipe.transform(education.endYear);
+    return `${startYear}—${endYear}`;
+  }
+
+  public getExperienceDateRange(experience: Experience): string {
+    const startDate = experience.startDate;
+    const endDate = this.endDatePipe.transform(experience.endDate);
+    return `${startDate}—${endDate}`;
   }
 }

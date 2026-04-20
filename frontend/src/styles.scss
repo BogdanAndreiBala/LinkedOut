@@ -13,6 +13,16 @@ body {
   width: 100%;
   overflow: hidden;
   box-sizing: border-box;
+  color-scheme: light;
+}
+
+html.dark-theme,
+body.dark-theme {
+  color-scheme: dark;
+  background-color: gray;
+
+  --mat-sys-surface: gray;
+  --mat-sys-background: gray;
 }
 
 *,
