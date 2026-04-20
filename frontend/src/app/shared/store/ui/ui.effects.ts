@@ -5,11 +5,7 @@ import { of } from 'rxjs';
 import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { UsersService } from '../../services/user.service';
 import { selectIsDarkTheme } from './ui.selectors';
-<<<<<<< HEAD
-import { selectCurrentUser } from '../auth/auth.selectors'; // 🌟 Grab from the auth store! [cite: 72]
-=======
 import { selectCurrentUser } from '../auth/auth.selectors';
->>>>>>> master
 import { initTheme, toggleTheme, toggleThemeFailure, toggleThemeSuccess } from './ui.actions';
 
 @Injectable()
@@ -27,14 +23,12 @@ export class UiEffects {
         if (!currentUser) {
           return of(toggleThemeFailure({ error: 'No user' }));
         }
-        return this.usersService
-          .updateUser(currentUser.id, { ...currentUser, isDarkTheme: newTheme })
-          .pipe(
-            map(() => toggleThemeSuccess({ isDarkTheme: newTheme })),
-            catchError((error) => of(toggleThemeFailure({ error: error.message }))),
-          );
-      }),
-    ),
+        return this.usersService.updateUser(currentUser.id, { ...currentUser, isDarkTheme: newTheme }).pipe(
+          map(() => toggleThemeSuccess({ isDarkTheme: newTheme })),
+          catchError((error) => of(toggleThemeFailure({ error: error.message })))
+        );
+      })
+    )
   );
 
   applyTheme$ = createEffect(
@@ -43,8 +37,8 @@ export class UiEffects {
         ofType(initTheme, toggleThemeSuccess),
         tap(({ isDarkTheme }) => {
           document.documentElement.classList.toggle('dark-theme', isDarkTheme);
-        }),
+        })
       ),
-    { dispatch: false },
+    { dispatch: false }
   );
 }
