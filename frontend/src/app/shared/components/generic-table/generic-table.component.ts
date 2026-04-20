@@ -9,6 +9,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Company } from '../../models/company.model';
+import { Job } from '../../models/job.model';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-generic-table',
@@ -27,8 +30,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrls: ['./generic-table.component.scss'],
 })
 export class GenericTableComponent {
-  // Here I used any because the data could be Companies,Jobs, Users ...etc
-  @Input() data: any[] = [];
+  @Input() data: Company[] | Job[] | User[] = [];
   @Input() totalItems: number = 0;
   @Input() isLoading: boolean = false;
 

@@ -1,5 +1,4 @@
 import { Component, inject, DestroyRef, OnInit } from '@angular/core';
-import { UsersService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
 import { MatTableModule } from '@angular/material/table';
@@ -9,7 +8,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HighlightTableRowDirective } from '../../directives/highlight-row/highlight-table-row.directive';
 import { MatIcon } from '@angular/material/icon';
 import { TechIconsDirective } from '../../directives/tech-icon/tech-icons.directive';
-import { PaginatedResponse } from '../../models/pagination.model';
 import { UserTableFacade } from '../../store/user-table/user-table.facade';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -18,7 +16,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AsyncPipe } from '@angular/common';
 import { MatFormField } from '@angular/material/form-field';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,7 +32,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatProgressSpinnerModule,
     AsyncPipe,
     MatFormField,
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -46,7 +42,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   standalone: true,
 })
 export class NetworkTableComponent implements OnInit {
-  private facade = inject(UserTableFacade);
+  private userFacade = inject(UserTableFacade);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private destroyRef = inject(DestroyRef);
@@ -58,11 +54,11 @@ export class NetworkTableComponent implements OnInit {
   public isOffline: boolean = false;
   private activeSnackBar: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
-  public users$ = this.facade.users$;
-  public totalMatchCount$ = this.facade.totalMatchCount$;
-  public loading$ = this.facade.loading$;
-  public preferences$ = this.facade.preferences$;
-  public error$ = this.facade.error$;
+  public users$ = this.userFacade.users$;
+  public totalMatchCount$ = this.userFacade.totalMatchCount$;
+  public loading$ = this.userFacade.loading$;
+  public preferences$ = this.userFacade.preferences$;
+  public error$ = this.userFacade.error$;
 
   public pageSizeOptions = [5, 10, 20, 50];
 
@@ -75,7 +71,7 @@ export class NetworkTableComponent implements OnInit {
 
     this.searchBar.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-      .subscribe((value) => this.facade.setSearch(value ?? ''));
+      .subscribe((value) => this.userFacade.setSearch(value ?? ''));
 
     this.error$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((err) => {
       if (err) {
@@ -87,11 +83,6 @@ export class NetworkTableComponent implements OnInit {
         });
       }
     });
-
-    const savedPrefs = localStorage.getItem('userTablePreferences');
-    if (savedPrefs) {
-      this.facade.initPreferences(JSON.parse(savedPrefs));
-    }
 
     const onlineHandler = () => {
       if (this.activeSnackBar) {
@@ -111,11 +102,11 @@ export class NetworkTableComponent implements OnInit {
       window.removeEventListener('online', onlineHandler);
     });
 
-    this.facade.loadUsers();
+    this.userFacade.loadUsers();
   }
 
   public onPageChange(event: PageEvent): void {
-    this.facade.setPagination(event.pageIndex + 1, event.pageSize);
+    this.userFacade.setPagination(event.pageIndex + 1, event.pageSize);
   }
 
   public onRowClick(user: User) {

@@ -4,8 +4,12 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
+<<<<<<< HEAD
     "rootDir": "./src",
     "types": ["vitest/globals"]
+=======
+    "rootDir": "./src"
+>>>>>>> master
   },
   "include": ["src/**/*.ts"]
 }

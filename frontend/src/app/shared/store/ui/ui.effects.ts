@@ -5,7 +5,11 @@ import { of } from 'rxjs';
 import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { UsersService } from '../../services/user.service';
 import { selectIsDarkTheme } from './ui.selectors';
+<<<<<<< HEAD
 import { selectCurrentUser } from '../auth/auth.selectors'; // 🌟 Grab from the auth store! [cite: 72]
+=======
+import { selectCurrentUser } from '../auth/auth.selectors';
+>>>>>>> master
 import { initTheme, toggleTheme, toggleThemeFailure, toggleThemeSuccess } from './ui.actions';
 
 @Injectable()

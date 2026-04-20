@@ -1,5 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import type { Education, Experience } from './types/profile.types';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import type {
+  TablePreferences,
+} from './types/profile.types';
+import { Skill } from 'src/skills/skills.entity';
+import { Education } from './education.entity';
+import { Experience } from './experience.entity';
 
 @Entity('users')
 export class User {
@@ -12,39 +18,50 @@ export class User {
   @Column()
   lastName: string;
 
-  @Column()
+  @Column({ nullable: true })
   profileImage: string;
 
-  @Column()
+  @Column({ nullable: true })
   headline: string;
 
-  @Column()
+  @Column({ nullable: true })
   dateOfBirth: string;
 
   @Column()
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   phone: string;
 
-  @Column()
+  @Column({ nullable: true })
   location: string;
 
-  @Column()
+  @Column({ nullable: true })
   about: string;
 
-  @Column('simple-array')
-  skills: string[];
+  @Exclude()
+  @Column()
+  password: string;
 
-  @Column('simple-json')
+  @Column({ default: false })
+  isDarkTheme: boolean;
+
+  @ManyToMany(() => Skill, (skill) => skill.users)
+  @JoinTable()
+  skills: Skill[];
+
+  @OneToMany(() => Education, (education)=> education.user)
   education: Education[];
 
-  @Column('simple-json')
+  @OneToMany(() => Experience, (exp)=> exp.user)
   experience: Experience[];
 
-  @Column()
+  @Column({ default: 0 })
   connections: number;
 
-  @Column()
+  @Column({ nullable: true })
   website: string;
+
+  @Column({ type: 'simple-json', nullable: true })
+  tablePreferences: TablePreferences | null;
 }
